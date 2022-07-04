@@ -1,0 +1,20 @@
+{"L":"INFO","T":"2022-06-12T14:43:55.536+0700","M":"Hello Zap Logger","Test1":"Test1Val"}
+{"L":"INFO","T":"2022-06-12T15:01:46.039+0700","M":"Hello Zap Logger","Test1":"Test1Val"}
+{"L":"ERROR","T":"2022-06-13T12:06:59.907+0700","M":"[DB Transaction]","Create User":"Failed to create user..."}
+{"L":"ERROR","T":"2022-06-13T12:06:59.911+0700","M":"[DB Transaction]","Create User":"Failed to create user..."}
+{"L":"ERROR","T":"2022-06-13T12:08:47.115+0700","M":"[DB Transaction]","Error":"pq: relation \"users\" does not exist"}
+{"L":"ERROR","T":"2022-06-13T12:08:47.119+0700","M":"[DB Transaction]","Create User":"Failed to create user..."}
+{"L":"ERROR","T":"2022-06-13T12:11:53.066+0700","M":"[DB Transaction]","Error":"pq: relation \"users\" does not exist"}
+{"L":"ERROR","T":"2022-06-13T12:11:53.071+0700","M":"[DB Transaction]","Create User":"Failed to create user..."}
+{"L":"ERROR","T":"2022-06-13T12:18:47.220+0700","M":"[DB Transaction]","Error":"pq: relation \"users\" does not exist"}
+{"L":"ERROR","T":"2022-06-13T12:18:47.224+0700","M":"[DB Transaction]","Create User":"Failed to create user..."}
+{"L":"ERROR","T":"2022-06-13T12:27:01.129+0700","M":"[Database Error]","Error":"pq: relation \"users\" does not exist"}
+{"L":"ERROR","T":"2022-06-13T12:29:09.096+0700","M":"[Database Error]","Error":"pq: relation \"users\" does not exist"}
+{"L":"ERROR","T":"2022-06-13T12:29:46.053+0700","M":"[Database Error]","Error":"pq: relation \"users\" does not exist"}
+{"L":"ERROR","T":"2022-06-13T13:09:22.540+0700","M":"[DB Transaction]","Error":"missing destination name id in *dao.User","Message":"Transaction error at createUserQuery."}
+{"L":"ERROR","T":"2022-06-13T13:15:02.120+0700","M":"[DB Transaction]","Error":"sql: Scan error on column index 3, name \"last_login\": unsupported Scan, storing driver.Value type <nil> into type *time.Time","Message":"Transaction error at createUserQuery."}
+{"L":"ERROR","T":"2022-06-13T13:15:26.898+0700","M":"[DB Transaction]","Error":"missing destination name user_id in *dao.User","Message":"Transaction error at createUserProfileQuery."}
+{"L":"ERROR","T":"2022-06-13T16:08:44.444+0700","M":"[DB Transaction]","Error":"pq: duplicate key value violates unique constraint \"users_email_key\"","Message":"Transaction error at createUserQuery."}
+{"L":"ERROR","T":"2022-06-13T16:43:42.167+0700","M":"[DB Query]","Error":"pq: syntax error at or near \"INNER\"","Message":"Query error at findUserByEmailQuery"}
+{"L":"ERROR","T":"2022-06-13T16:45:04.050+0700","M":"[DB Query]","Error":"missing destination name user_id in *dao.User","Message":"Query error at findUserByEmailQuery"}
+{"L":"ERROR","T":"2022-06-13T16:53:02.951+0700","M":"[DB Query]","Error":"pq: got 1 parameters but the statement requires 0","Message":"Query error at findUserByEmailQuery"}

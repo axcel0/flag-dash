@@ -1,0 +1,24 @@
+server:
+     AppName: Flag-Dash REST API
+     AppPort: 3000
+     Mode: Development
+logger:
+     Development: true
+     Encoding: json
+     Level: Debug
+lumberjackLogger:
+     MaxSize: 100
+     MaxBackups: 5
+     MaxAge: 7
+     Compress: false
+db:
+     Host: 127.0.0.1
+     Port: 55000
+     User: "postgres"
+     Pass: "postgrespw"
+     Name: "flag_dash"
+jwt:
+     SecretKey: "HelloWorld123"
+     RefreshSecretKey: "helloworld123"
+     Duration: 5
+     RefreshDuration: 7
