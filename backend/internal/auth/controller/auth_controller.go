@@ -20,6 +20,14 @@ func (ac *authController) UserLogin(c *fiber.Ctx) error {
 	return nil
 }
 
+// CreateUser Function to create a new user.
+// @Description Create a new user.
+// @Summary create a new user
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Success 200 {array} dto.CreateUserResponse
+// @Router /api/v1/auth/create-user [post]
 func (ac *authController) CreateUser(c *fiber.Ctx) error {
 	userReq := &dto.CreateUserRequest{}
 	c.BodyParser(userReq)

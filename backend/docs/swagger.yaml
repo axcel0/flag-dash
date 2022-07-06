@@ -1,0 +1,40 @@
+basePath: /api
+definitions:
+  dto.CreateUserResponse:
+    properties:
+      msg:
+        type: string
+      status:
+        type: string
+    type: object
+host: localhost:3001
+info:
+  contact:
+    email: fiber@swagger.io
+    name: API Support
+  description: This is a sample swagger for Fiber
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Fiber Example API
+  version: "1.0"
+paths:
+  /api/v1/auth/create-user:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.CreateUserResponse'
+            type: array
+      summary: create a new user
+      tags:
+      - Users
+swagger: "2.0"

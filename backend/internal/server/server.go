@@ -26,6 +26,9 @@ func NewServer(cfg *config.Config, db *sqlx.DB, logger logger.Logger) *Server{
 func (s *Server) Run (){
 	s.InitializeServer()
 
+	// Run Swagger Documentation
+	s.InitializeSwagger()
+
 	s.fiber.Listen(":3001")
 
 }
