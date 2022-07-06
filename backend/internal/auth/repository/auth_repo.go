@@ -22,7 +22,7 @@ func NewAuthRepository(cfg *config.Config, db *sqlx.DB, logger logger.Logger) au
 	return &authRepo{cfg:cfg, db:db, logger: logger}
 }
 
-func (r *authRepo)	Create(ctx context.Context, user *dao.User, userProfile *dao.UserProfile) (*dao.User, *dao.UserProfile, error) {
+func (r *authRepo) CreateUser(ctx context.Context, user *dao.User, userProfile *dao.UserProfile) (*dao.User, *dao.UserProfile, error) {
 
 	u := &dao.User{}
 	up := &dao.UserProfile{}

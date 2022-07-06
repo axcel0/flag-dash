@@ -8,6 +8,7 @@ import (
 	"github.com/blastertwist/flag-dash/internal/auth"
 	"github.com/blastertwist/flag-dash/internal/dao"
 	"github.com/blastertwist/flag-dash/internal/dto"
+	"github.com/blastertwist/flag-dash/pkg/utils"
 )
 
 type authService struct {
@@ -24,9 +25,17 @@ func(s *authService) UserLogin(cu *dto.UserLoginRequest) (*dto.UserLoginResponse
 }
 
 func(s *authService) CreateUser(cu *dto.CreateUserRequest) (*dto.CreateUserResponse, error) {
-	_, _, err := s.r.Create(context.Background(), &dao.User{
+	// Hashing Password
+	hashedPassword, errHash := utils.HashPassword(cu.Password)
+	if errHash != nil {
+		return &dto.CreateUserResponse{
+			Status: "401",
+			Msg: "Failed to create user, Hashing Failed",
+		}, errHash
+	}
+	_, _, err := s.r.CreateUser(context.Background(), &dao.User{
 		Email: cu.Email,
-		Password: cu.Password,
+		Password: hashedPassword,
 	},
 	&dao.UserProfile{
 		FirstName: cu.FirstName,
