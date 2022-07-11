@@ -16,7 +16,28 @@ func NewAuthController(cfg *config.Config, as auth.Service) auth.Controller {
 	return &authController{cfg: cfg, as: as}
 }
 
+
+// UserLogin Function to handler UserLogin request.
+// @Description Handle User Login.
+// @Summary UserLogin controller function
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Success 200 {array} dto.UserLoginResponse
+// @Router /api/v1/auth/login [post]
 func (ac *authController) UserLogin(c *fiber.Ctx) error {
+	
+	req := &dto.UserLoginRequest{}
+	c.BodyParser(req)
+	
+	res, err := ac.as.UserLogin(c.Context(), req)
+
+	if err != nil {
+		c.JSON(res)
+		return err
+	}
+
+	c.JSON(res)
 	return nil
 }
 

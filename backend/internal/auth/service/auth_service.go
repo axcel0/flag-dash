@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"log"
 
 	"github.com/blastertwist/flag-dash/config"
@@ -21,7 +22,45 @@ func NewAuthService(cfg *config.Config, r auth.Repository) auth.Service {
 }
 
 func (s *authService) UserLogin(ctx context.Context, cu *dto.UserLoginRequest) (*dto.UserLoginResponse, error) {
-	return &dto.UserLoginResponse{}, nil
+	user, errRepo := s.r.FindByEmail(ctx, &dao.User{Email: cu.Email})
+
+	if errRepo != nil {
+		return nil, errRepo
+	}
+
+	valid, errValid := utils.ValidatePassword(cu.Password, user.Password)
+
+	if errValid != nil {
+		return nil, errValid
+	}
+
+	if !valid {
+		return nil, errors.New("Password Not Same")
+	}
+
+	tokenNormal, errNormal := utils.GenerateJWT(&dao.UserJWTData{
+		UserId: user.ID,
+		Email: user.Email,
+	}, s.cfg.JWT.SecretKey, 5)
+
+	if errNormal != nil {
+		return nil, errNormal
+	}
+
+	tokenRefresh, errRefresh := utils.GenerateJWT(&dao.UserJWTData{
+		UserId: user.ID,
+		Email: user.Email,
+	}, s.cfg.JWT.RefreshSecretKey, uint8(s.cfg.JWT.RefreshDuration))
+
+	if errRefresh != nil {
+		return nil, errRefresh
+	}
+
+
+	return &dto.UserLoginResponse{
+		NormalJWT: tokenNormal,
+		RefreshJWT: tokenRefresh,
+	}, nil
 }
 
 func (s *authService) CreateUser(ctx context.Context, cu *dto.CreateUserRequest) (*dto.CreateUserResponse, error) {

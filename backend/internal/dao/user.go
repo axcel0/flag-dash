@@ -31,3 +31,8 @@ type UserRole struct {
 	UserID		uint32
 	RoleID		uint32
 }
+
+type UserJWTData struct {
+	UserId	uint32
+	Email	string
+}
