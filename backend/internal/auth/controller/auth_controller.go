@@ -9,11 +9,11 @@ import (
 
 type authController struct {
 	cfg *config.Config
-	as auth.Service
+	as  auth.Service
 }
 
-func NewAuthController(cfg *config.Config, as auth.Service) auth.Controller{
-	return &authController{cfg: cfg, as:as}
+func NewAuthController(cfg *config.Config, as auth.Service) auth.Controller {
+	return &authController{cfg: cfg, as: as}
 }
 
 func (ac *authController) UserLogin(c *fiber.Ctx) error {
@@ -32,7 +32,7 @@ func (ac *authController) CreateUser(c *fiber.Ctx) error {
 	userReq := &dto.CreateUserRequest{}
 	c.BodyParser(userReq)
 
-	res, err := ac.as.CreateUser(userReq)
+	res, err := ac.as.CreateUser(c.Context(), userReq)
 	if err != nil {
 		c.JSON(res)
 		return err
@@ -46,7 +46,7 @@ func (ac *authController) GetUser(c *fiber.Ctx) error {
 	getUserReq := &dto.GetUserRequest{}
 	c.BodyParser(getUserReq)
 
-	getUserRes, err := ac.as.GetUserByEmail(getUserReq)
+	getUserRes, err := ac.as.GetUserByEmail(c.Context(), getUserReq)
 
 	if err != nil {
 		c.JSON(getUserRes)

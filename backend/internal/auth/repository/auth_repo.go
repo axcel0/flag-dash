@@ -13,13 +13,13 @@ import (
 )
 
 type authRepo struct {
-	cfg *config.Config
-	db *sqlx.DB
+	cfg    *config.Config
+	db     *sqlx.DB
 	logger logger.Logger
 }
 
-func NewAuthRepository(cfg *config.Config, db *sqlx.DB, logger logger.Logger) auth.Repository{
-	return &authRepo{cfg:cfg, db:db, logger: logger}
+func NewAuthRepository(cfg *config.Config, db *sqlx.DB, logger logger.Logger) auth.Repository {
+	return &authRepo{cfg: cfg, db: db, logger: logger}
 }
 
 func (r *authRepo) CreateUser(ctx context.Context, user *dao.User, userProfile *dao.UserProfile) (*dao.User, *dao.UserProfile, error) {
@@ -52,24 +52,23 @@ func (r *authRepo) CreateUser(ctx context.Context, user *dao.User, userProfile *
 
 }
 
-func (r *authRepo)	Update(ctx context.Context, user *dao.User) (*dao.User, error) {
+func (r *authRepo) Update(ctx context.Context, user *dao.User) (*dao.User, error) {
 	return nil, nil
 }
 
-func (r *authRepo)	Delete(ctx context.Context, userID uint32) error {
+func (r *authRepo) Delete(ctx context.Context, user *dao.User) error {
 	return nil
 }
 
-func (r *authRepo)	FindByID(ctx context.Context, userID uint32) (*dao.User, error) {
+func (r *authRepo) FindByID(ctx context.Context, user *dao.User) (*dao.User, error) {
 	return nil, nil
 }
 
-func (r *authRepo)	FindByEmail(ctx context.Context, email string) (*dao.User, error) {
+func (r *authRepo) FindByEmail(ctx context.Context, user *dao.User) (*dao.User, error) {
 	u := &dao.User{}
-	if err := r.db.QueryRowxContext(ctx, findUserByEmailQuery, email).StructScan(u); err != nil{
+	if err := r.db.QueryRowxContext(ctx, findUserByEmailQuery, user.Email).StructScan(u); err != nil {
 		r.logger.Error("[DB Query]", zap.String("Error", err.Error()), zap.String("Message", "Query error at findUserByEmailQuery"))
-		return u, err
+		return nil, err
 	}
 	return u, nil
 }
-

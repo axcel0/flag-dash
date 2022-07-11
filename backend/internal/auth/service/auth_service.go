@@ -12,62 +12,64 @@ import (
 )
 
 type authService struct {
-	cfg 	*config.Config
-	r 		auth.Repository
+	cfg *config.Config
+	r   auth.Repository
 }
 
 func NewAuthService(cfg *config.Config, r auth.Repository) auth.Service {
-	return &authService{cfg:cfg, r:r}
+	return &authService{cfg: cfg, r: r}
 }
 
-func(s *authService) UserLogin(cu *dto.UserLoginRequest) (*dto.UserLoginResponse, error) {
+func (s *authService) UserLogin(ctx context.Context, cu *dto.UserLoginRequest) (*dto.UserLoginResponse, error) {
 	return &dto.UserLoginResponse{}, nil
 }
 
-func(s *authService) CreateUser(cu *dto.CreateUserRequest) (*dto.CreateUserResponse, error) {
+func (s *authService) CreateUser(ctx context.Context, cu *dto.CreateUserRequest) (*dto.CreateUserResponse, error) {
 	// Hashing Password
 	hashedPassword, errHash := utils.HashPassword(cu.Password)
 	if errHash != nil {
 		return &dto.CreateUserResponse{
 			Status: "401",
-			Msg: "Failed to create user, Hashing Failed",
+			Msg:    "Failed to create user, Hashing Failed",
 		}, errHash
 	}
-	_, _, err := s.r.CreateUser(context.Background(), &dao.User{
-		Email: cu.Email,
+	_, _, err := s.r.CreateUser(ctx, &dao.User{
+		Email:    cu.Email,
 		Password: hashedPassword,
 	},
-	&dao.UserProfile{
-		FirstName: cu.FirstName,
-		LastName: cu.LastName,
-		PhoneNumber: cu.PhoneNumber,
-	})
+		&dao.UserProfile{
+			FirstName:   cu.FirstName,
+			LastName:    cu.LastName,
+			PhoneNumber: cu.PhoneNumber,
+		})
 
 	if err != nil {
 		log.Fatal(err)
 		return &dto.CreateUserResponse{
 			Status: "401",
-			Msg: "Failed to create user",
+			Msg:    "Failed to create user",
 		}, err
 	}
 	return &dto.CreateUserResponse{
 		Status: "201",
-		Msg: "User created.",
+		Msg:    "User created.",
 	}, nil
 }
 
-func(s *authService) GetUserByEmail(gu *dto.GetUserRequest) (*dto.GetUserResponse, error){
-	u, err := s.r.FindByEmail(context.Background(), gu.Email)
+func (s *authService) GetUserByEmail(ctx context.Context, gu *dto.GetUserRequest) (*dto.GetUserResponse, error) {
+	u, err := s.r.FindByEmail(ctx, &dao.User{
+		Email: gu.Email,
+	})
 	if err != nil {
 		return &dto.GetUserResponse{
 			Status: "500",
-			Msg: "Internal Server Error, failed to get User By Email.",
+			Msg:    "Internal Server Error, failed to get User By Email.",
 		}, err
 	}
 
 	userRes := &dto.GetUserResponse{
 		Status: "200",
-		Msg: "Successfully get user by e-mail",
+		Msg:    "Successfully get user by e-mail",
 	}
 	userRes.User.Email = u.Email
 	userRes.User.Profile.FirstName = u.FirstName
