@@ -22,35 +22,30 @@ func NewAuthService(cfg *config.Config, r auth.Repository) auth.Service {
 }
 
 func (s *authService) UserLogin(ctx context.Context, cu *dto.UserLoginRequest) (*dto.UserLoginResponse, error) {
+
 	user, errRepo := s.r.FindByEmail(ctx, &dao.User{Email: cu.Email})
 
 	if errRepo != nil {
 		return nil, errRepo
 	}
-
+	
 	valid, errValid := utils.ValidatePassword(cu.Password, user.Password)
 
-	if errValid != nil {
+	if errValid != nil { 
 		return nil, errValid
 	}
 
 	if !valid {
-		return nil, errors.New("Password Not Same")
+		return nil, errors.New("Password not same")
 	}
 
-	tokenNormal, errNormal := utils.GenerateJWT(&dao.UserJWTData{
-		UserId: user.ID,
-		Email: user.Email,
-	}, s.cfg.JWT.SecretKey, 5)
+	tokenNormal, errNormal := utils.GenerateJWT(user, s.cfg.JWT.SecretKey, 5)
 
 	if errNormal != nil {
 		return nil, errNormal
 	}
 
-	tokenRefresh, errRefresh := utils.GenerateJWT(&dao.UserJWTData{
-		UserId: user.ID,
-		Email: user.Email,
-	}, s.cfg.JWT.RefreshSecretKey, uint8(s.cfg.JWT.RefreshDuration))
+	tokenRefresh, errRefresh := utils.GenerateJWT(user, s.cfg.JWT.RefreshSecretKey, uint8(s.cfg.JWT.RefreshDuration))
 
 	if errRefresh != nil {
 		return nil, errRefresh
@@ -60,6 +55,36 @@ func (s *authService) UserLogin(ctx context.Context, cu *dto.UserLoginRequest) (
 	return &dto.UserLoginResponse{
 		NormalJWT: tokenNormal,
 		RefreshJWT: tokenRefresh,
+	}, nil
+}
+
+func (s *authService) RefreshToken(ctx context.Context, refreshTokenReq *dto.UserRefreshTokenRequest) (*dto.UserRefreshTokenResponse, error) {
+	isValid, claims, err := utils.VerifyJWT(refreshTokenReq.RefreshToken, s.cfg.JWT.RefreshSecretKey)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if !isValid {
+		return nil, errors.New("JWT Error: InvalidToken")
+	}
+
+	user, err := s.r.FindByEmail(ctx, &dao.User{Email: claims.Email})
+
+	if err != nil {
+		return nil, err
+	}
+
+	tokenString, err := utils.GenerateJWT(user, s.cfg.JWT.SecretKey, 5)
+
+	if err != nil {
+		return nil, err
+	}
+
+
+	return &dto.UserRefreshTokenResponse{
+		Status: "200",
+		Token: tokenString,
 	}, nil
 }
 
@@ -95,6 +120,10 @@ func (s *authService) CreateUser(ctx context.Context, cu *dto.CreateUserRequest)
 	}, nil
 }
 
+func (s *authService) EditUser(ctx context.Context, editUserReq *dto.EditUserRequest) (*dto.EditUserResponse, error) {
+	return nil, nil
+}
+
 func (s *authService) GetUserByEmail(ctx context.Context, gu *dto.GetUserRequest) (*dto.GetUserResponse, error) {
 	u, err := s.r.FindByEmail(ctx, &dao.User{
 		Email: gu.Email,
@@ -117,4 +146,8 @@ func (s *authService) GetUserByEmail(ctx context.Context, gu *dto.GetUserRequest
 	userRes.User.Role.Level = u.RoleLevel
 
 	return userRes, nil
+}
+
+func (s *authService) DeleteUser(ctx context.Context, deleteUserReq *dto.DeleteUserRequest) (*dto.DeleteUserResponse, error) {
+	return nil, nil
 }

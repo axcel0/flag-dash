@@ -1,21 +1,40 @@
 package server
 
 import (
-	"github.com/blastertwist/flag-dash/internal/auth/controller"
-	"github.com/blastertwist/flag-dash/internal/auth/repository"
-	router "github.com/blastertwist/flag-dash/internal/auth/route"
-	"github.com/blastertwist/flag-dash/internal/auth/service"
+	authController "github.com/blastertwist/flag-dash/internal/auth/controller"
+	authRepository "github.com/blastertwist/flag-dash/internal/auth/repository"
+	authRouter "github.com/blastertwist/flag-dash/internal/auth/route"
+	authService "github.com/blastertwist/flag-dash/internal/auth/service"
+	flagController "github.com/blastertwist/flag-dash/internal/flag/controller"
+	flagRepository "github.com/blastertwist/flag-dash/internal/flag/repository"
+	flagRouter "github.com/blastertwist/flag-dash/internal/flag/router"
+	flagService "github.com/blastertwist/flag-dash/internal/flag/service"
+	"github.com/blastertwist/flag-dash/internal/middlewares"
+	projectController "github.com/blastertwist/flag-dash/internal/project/controller"
+	projectRepository "github.com/blastertwist/flag-dash/internal/project/repository"
+	projectRouter "github.com/blastertwist/flag-dash/internal/project/route"
+	projectService "github.com/blastertwist/flag-dash/internal/project/service"
 )
 
 func (s *Server) InitializeServer () {
 	// Initialize Repositories
-	authRepository := repository.NewAuthRepository(s.cfg, s.db, s.logger)
+	authRepository := authRepository.NewAuthRepository(s.cfg, s.db, s.logger)
+	projectRepository := projectRepository.NewProjectRepository(s.cfg, s.db, s.logger)
+	flagRepository := flagRepository.NewFlagRepo(s.cfg, s.db)
 
 	// Initialize Services
-	authService := service.NewAuthService(s.cfg, authRepository)
+	authService := authService.NewAuthService(s.cfg, authRepository)
+	projectService := projectService.NewProjectService(s.cfg, projectRepository)
+	flagService := flagService.NewFlagService(s.cfg, flagRepository)
 
 	// Initialize Handlers
-	authController := controller.NewAuthController(s.cfg, authService)
+	authController := authController.NewAuthController(s.cfg, authService)
+	projectController := projectController.NewProjectController(s.cfg, projectService)
+	flagController := flagController.NewFlagController(s.cfg, flagService)
+
+
+	//Initialize Middlewares
+	mw := middlewares.NewMiddlewareManager(s.cfg, s.logger)
 
 	// Initialize Routes
 	api := s.fiber.Group("/api")
@@ -24,6 +43,8 @@ func (s *Server) InitializeServer () {
 	v1 := api.Group("/v1")
 
 	// Initialize All Routes
-	router.InitializeAuthRoute(v1, authController)
+	authRouter.InitializeAuthRoute(v1, mw, authController)
+	projectRouter.InitializeProjectRoute(v1, mw, projectController)
+	flagRouter.InitializeFlagRouter(v1, mw, flagController)
 
 }

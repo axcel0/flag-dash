@@ -33,7 +33,7 @@ func (ac *authController) UserLogin(c *fiber.Ctx) error {
 	res, err := ac.as.UserLogin(c.Context(), req)
 
 	if err != nil {
-		c.JSON(res)
+		c.JSON("Error")
 		return err
 	}
 
@@ -75,5 +75,17 @@ func (ac *authController) GetUser(c *fiber.Ctx) error {
 	}
 	c.JSON(getUserRes)
 
+	return nil
+}
+
+func (ac *authController) EditUser(c *fiber.Ctx) error {
+	return nil
+}
+
+func (ac *authController) DeleteUser (c *fiber.Ctx) error {
+	return nil
+}
+
+func (ac *authController) RefreshToken(c *fiber.Ctx) error {
 	return nil
 }

@@ -52,3 +52,50 @@ type GetUserResponse struct {
 		} `json:"userRole"`
 	}
 }
+
+type UserAuthorizedResponse struct {
+	Status	string `json:"status"`
+	Msg		string `json:"msg"`
+}
+
+type UserRefreshTokenRequest struct {
+	RefreshToken	string	`json:"refresh_token"`
+}
+
+type UserRefreshTokenResponse struct {
+	Status 	string `json:"status"`
+	Token	string `json:"token"`
+}
+
+type EditUserRequest struct {
+	UserID	uint32	`json:"id"`
+	Email	string	`json:"email"`
+	Password	string `json:"password"`
+	FirstName	string	`json:"first_name"`
+	LastName	string	`json:"last_name"`
+	RoleLevel	uint32	`json:"role_level"`
+}
+
+type EditUserResponse struct {
+	Status	string	`json:"status"`
+	User 	struct {
+		Email string `json:"email"`
+		Profile struct {
+			FirstName string `json:"firstName"`
+			LastName string `json:"lastName"`
+		} `json:"userProfile"`
+		Role struct {
+			Name string `json:"Name"`
+			Level uint32 `json:"Level"`
+		} `json:"userRole"`
+	}
+}
+
+type DeleteUserRequest struct {
+	UserID	uint32	`json:"id"`
+}
+
+type DeleteUserResponse struct {
+	Status	string	`json:"status"`
+	Msg		string	`json:"msg"`
+}
