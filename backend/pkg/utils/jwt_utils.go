@@ -1,32 +1,35 @@
 package utils
 
 import (
+	"fmt"
 	"time"
 
+	"github.com/blastertwist/flag-dash/internal/dao"
 	"github.com/golang-jwt/jwt/v4"
 )
 
 
 type Claims struct {
-	Data interface {}
+	Email	string
+	ID		string
 	jwt.StandardClaims
 }
 
 
-func GenerateJWT(data interface{}, secretKey string, expiredTime uint8) (string, error){
+func GenerateJWT(user *dao.User, secretKey string, expiredTime uint8) (string, error){
 	
 	expirationTime := time.Now().Add(time.Duration(expiredTime) * time.Minute)
 	claims := &Claims{
-		Data: data,
+		Email: user.Email,
+		ID: fmt.Sprint(user.ID),
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	tokenString, err := token.SignedString(secretKey)
-
+	tokenString, err := token.SignedString([]byte(secretKey))
 	if err != nil {
 		return "", err
 	}
@@ -34,21 +37,22 @@ func GenerateJWT(data interface{}, secretKey string, expiredTime uint8) (string,
 	return tokenString, nil
 }
 
-func VerifyJWT(tokenString string) (bool, error){
+func VerifyJWT(tokenString string, tokenSecret string) (bool, *Claims, error){
 	
 	claims := &Claims{}
 
-	token, err := jwt.ParseWithClaims(tokenString, claims, func(jwtKey *jwt.Token)(interface{}, error){
-		return jwtKey, nil
-	})
+    token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+
+        return []byte(tokenSecret), nil
+    })
 
 	if err != nil {
-		return false, err
+		return false, nil, err
 	}
 
 	if !token.Valid {
-		return false, nil
+		return false, nil, nil
 	}
 
-	return true, nil
+	return true, claims, nil
 }
