@@ -79,13 +79,43 @@ func (ac *authController) GetUser(c *fiber.Ctx) error {
 }
 
 func (ac *authController) EditUser(c *fiber.Ctx) error {
+	editUserReq  := &dto.EditUserRequest{}
+	c.BodyParser(editUserReq)
+
+	res, err := ac.as.EditUser(c.Context(), editUserReq)
+
+	if err != nil {
+		return err
+	}
+
+	c.JSON(res)
 	return nil
 }
 
 func (ac *authController) DeleteUser (c *fiber.Ctx) error {
+	deleteUserReq := &dto.DeleteUserRequest{}
+	c.BodyParser(deleteUserReq)
+
+	res, err := ac.as.DeleteUser(c.Context(), deleteUserReq)
+
+	if err != nil {
+		return err
+	}
+
+	c.JSON(res)
 	return nil
 }
 
 func (ac *authController) RefreshToken(c *fiber.Ctx) error {
+	refreshTokenReq := &dto.UserRefreshTokenRequest{}
+	c.BodyParser(refreshTokenReq)
+
+	res, err := ac.as.RefreshToken(c.Context(), refreshTokenReq)
+
+	if err != nil {
+		return err
+	}
+
+	c.JSON(res)
 	return nil
 }

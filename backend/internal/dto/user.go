@@ -73,16 +73,19 @@ type EditUserRequest struct {
 	Password	string `json:"password"`
 	FirstName	string	`json:"first_name"`
 	LastName	string	`json:"last_name"`
+	PhoneNumber	string	`json:"phone_number"`
 	RoleLevel	uint32	`json:"role_level"`
 }
 
 type EditUserResponse struct {
 	Status	string	`json:"status"`
+	Msg		string	`json:"msg"`
 	User 	struct {
 		Email string `json:"email"`
 		Profile struct {
 			FirstName string `json:"firstName"`
 			LastName string `json:"lastName"`
+			PhoneNumber	string `json:"phone_number"`
 		} `json:"userProfile"`
 		Role struct {
 			Name string `json:"Name"`

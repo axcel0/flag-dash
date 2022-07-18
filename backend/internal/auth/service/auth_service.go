@@ -121,7 +121,33 @@ func (s *authService) CreateUser(ctx context.Context, cu *dto.CreateUserRequest)
 }
 
 func (s *authService) EditUser(ctx context.Context, editUserReq *dto.EditUserRequest) (*dto.EditUserResponse, error) {
-	return nil, nil
+	
+	u := &dao.User{
+		ID: editUserReq.UserID,
+		Email: editUserReq.Email,
+		FirstName: editUserReq.FirstName,
+		LastName: editUserReq.LastName,
+		PhoneNumber: editUserReq.PhoneNumber,
+		RoleLevel: editUserReq.RoleLevel,
+	}
+
+	u, err := s.r.Update(ctx, u)
+
+	if err != nil {
+		return nil, err
+	}
+	userRes := &dto.EditUserResponse{
+		Status: "200",
+		Msg:    "Successfully edit user.",
+	}
+	userRes.User.Email = u.Email
+	userRes.User.Profile.FirstName = u.FirstName
+	userRes.User.Profile.LastName = u.LastName
+	userRes.User.Profile.PhoneNumber = u.PhoneNumber
+	userRes.User.Role.Name = u.RoleName
+	userRes.User.Role.Level = u.RoleLevel
+
+	return u, nil
 }
 
 func (s *authService) GetUserByEmail(ctx context.Context, gu *dto.GetUserRequest) (*dto.GetUserResponse, error) {
@@ -149,5 +175,14 @@ func (s *authService) GetUserByEmail(ctx context.Context, gu *dto.GetUserRequest
 }
 
 func (s *authService) DeleteUser(ctx context.Context, deleteUserReq *dto.DeleteUserRequest) (*dto.DeleteUserResponse, error) {
-	return nil, nil
+	err := s.r.Delete(ctx, &dao.User{ID: deleteUserReq.UserID})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.DeleteUserResponse{
+		Status: "200",
+		Msg: "Delete user success",
+	}, nil
 }

@@ -11,6 +11,7 @@ type User struct {
 	LastLogin	sql.NullTime	`db:"last_login"`
 	FirstName 	string			`db:"first_name"`
 	LastName 	string			`db:"last_name"`
+	PhoneNumber	string			`db:"phone_number"`
 	RoleName	string			`db:"role_name"`
 	RoleLevel 	uint32			`db:"role_level"`
 }

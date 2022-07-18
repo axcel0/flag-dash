@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
 
 	"github.com/blastertwist/flag-dash/config"
 	"github.com/blastertwist/flag-dash/internal/auth"
@@ -53,15 +54,36 @@ func (r *authRepo) CreateUser(ctx context.Context, user *dao.User, userProfile *
 }
 
 func (r *authRepo) Update(ctx context.Context, user *dao.User) (*dao.User, error) {
-	return nil, nil
+	u := &dao.User{}
+
+	if err := r.db.QueryRowxContext(ctx, updateUserQuery, user.Email, user.Password, user.FirstName, user.LastName, user.PhoneNumber, user.RoleLevel, user.ID).StructScan(u); err != nil {
+		return nil, err
+	}
+	return u, nil
 }
 
 func (r *authRepo) Delete(ctx context.Context, user *dao.User) error {
+	res, err := r.db.ExecContext(ctx, deleteUserQuery, user.ID)
+
+	if err != nil {
+		return err
+	}
+
+	rowAffected, err := res.RowsAffected()
+
+	if rowAffected == 0 {
+		return errors.New("SQL Error: Failed to delete intended row")
+	}
 	return nil
 }
 
 func (r *authRepo) FindByID(ctx context.Context, user *dao.User) (*dao.User, error) {
-	return nil, nil
+	u := &dao.User{}
+
+	if err := r.db.QueryRowxContext(ctx, findUserByIDQuery, user.ID).StructScan(u); err != nil {
+		return nil, err
+	}
+	return u, nil
 }
 
 func (r *authRepo) FindByEmail(ctx context.Context, user *dao.User) (*dao.User, error) {
