@@ -14,6 +14,7 @@ import (
 	projectRepository "github.com/blastertwist/flag-dash/internal/project/repository"
 	projectRouter "github.com/blastertwist/flag-dash/internal/project/route"
 	projectService "github.com/blastertwist/flag-dash/internal/project/service"
+	"github.com/gofiber/fiber/v2/middleware/compress"
 )
 
 func (s *Server) InitializeServer () {
@@ -35,6 +36,10 @@ func (s *Server) InitializeServer () {
 
 	//Initialize Middlewares
 	mw := middlewares.NewMiddlewareManager(s.cfg, s.logger)
+
+	s.fiber.Use(compress.New(compress.Config{
+    	Level: compress.LevelBestSpeed, // 1
+	}))
 
 	// Initialize Routes
 	api := s.fiber.Group("/api")
