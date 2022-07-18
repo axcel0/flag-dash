@@ -147,7 +147,7 @@ func (s *authService) EditUser(ctx context.Context, editUserReq *dto.EditUserReq
 	userRes.User.Role.Name = u.RoleName
 	userRes.User.Role.Level = u.RoleLevel
 
-	return u, nil
+	return userRes, nil
 }
 
 func (s *authService) GetUserByEmail(ctx context.Context, gu *dto.GetUserRequest) (*dto.GetUserResponse, error) {
