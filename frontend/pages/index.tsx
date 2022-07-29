@@ -1,11 +1,21 @@
+import type { ReactElement } from "react";
 import type { NextPage } from "next";
+import { signIn } from "next-auth/react";
+import Layout from "../components/Layout";
+import type { NextPageWithLayout } from "./_app";
 
-const Home: NextPage = () => {
+const Home: NextPageWithLayout = () => {
 	return (
-		<div>
-			<h1>Hello World</h1>
-		</div>
+		<>
+			<h1 className='text-5xl font-bold'>
+				Welcome to Flag Dashboard!
+			</h1>
+		</>
 	);
+};
+
+Home.getLayout = function getLayout(page: ReactElement) {
+	return <Layout>{page}</Layout>;
 };
 
 export default Home;
