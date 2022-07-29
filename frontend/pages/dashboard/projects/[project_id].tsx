@@ -42,9 +42,10 @@ const columns = [
 
 const flags = () => {
 	const router = useRouter();
-	const { flag_id } = router.query;
+	const { project_id } = router.query;
 
-	const [toggleCreateFlagModal, setToggleCreateFlagModal] = useState(true);
+	const [isOpenCreateFlag, setIsOpenCreateFlag] = useState(false);
+	const [isOpenEditProject, setIsOpenEditProject] = useState(false);
 
 	const [maxPage, setMaxPage] = useState(20);
 	const [currPage, setCurrPage] = useState(1);
@@ -55,8 +56,18 @@ const flags = () => {
 	return (
 		<div className='flex flex-wrap justify-center'>
 			<div className='w-full'>
-				<div className='bg-white shadow rounded-md my-3 mx-2 p-5'>
-					<h1 className='text-4xl'>Project Flags</h1>
+				<div className='flex flex-row bg-white shadow rounded-md my-3 mx-2 p-5'>
+					<h1 className='text-4xl'>Project: Name</h1>
+					<button
+						onClick={() =>
+							setIsOpenEditProject(!isOpenEditProject)
+						}
+						className='bg-green-300 hover:bg-green-200 rounded-md p-3 ml-auto'
+					>
+						<p className='text-lg font-medium'>
+							Edit Project
+						</p>
+					</button>
 				</div>
 				<div className='flex items-center bg-white shadow rounded-md my-3 mx-2 p-5'>
 					<div className='flex flex-row items-center mr-auto'>
@@ -124,9 +135,7 @@ const flags = () => {
 					</div>
 					<button
 						onClick={() =>
-							setToggleCreateFlagModal(
-								!toggleCreateFlagModal,
-							)
+							setIsOpenCreateFlag(!isOpenCreateFlag)
 						}
 						className='bg-green-300 rounded shadow p-3 ml-auto'
 					>
@@ -138,14 +147,56 @@ const flags = () => {
 				<div className='bg-white shadow rounded-md my-3 mx-2 p-5 h-[540px]'>
 					<NewTable tableData={data} columns={columns} />
 				</div>
-
+				{/* Edir Project Modal */}
 				<div>
 					<Modal
-						visible={toggleCreateFlagModal}
+						visible={isOpenEditProject}
 						onClose={() =>
-							setToggleCreateFlagModal(
-								!toggleCreateFlagModal,
-							)
+							setIsOpenEditProject(!isOpenEditProject)
+						}
+						childStyle='bg-white rounded-md w-[700px] h-100 p-10'
+					>
+						<h3 className='text-3xl my-2'>Edit Project</h3>
+						<h3 className='text-lg'>Name </h3>
+						<input
+							type='text'
+							placeholder='Name'
+							className='rounded border-2 p-2 my-2 w-full'
+						/>
+						<h3 className='text-lg'>Authorization Key</h3>
+						<div className='flex flex-row'>
+							<input
+								type='text'
+								placeholder='Generate key'
+								className='rounded border-2 p-2 my-2 w-full'
+							/>
+							<button className='rounded-md px-2 border-2 hover:bg-gray-200 ml-2'>
+								Generate
+							</button>
+						</div>
+						<div>
+							<button className='rounded-md bg-green-300 hover:bg-green-200 p-3 m-1'>
+								Edit
+							</button>
+							<button
+								onClick={() =>
+									setIsOpenEditProject(
+										!isOpenEditProject,
+									)
+								}
+								className='rounded-md bg-red-300 hover:bg-red-200 p-3 m-1'
+							>
+								Cancel
+							</button>
+						</div>
+					</Modal>
+				</div>
+				{/* Create Flag Modal */}
+				<div>
+					<Modal
+						visible={isOpenCreateFlag}
+						onClose={() =>
+							setIsOpenCreateFlag(!isOpenCreateFlag)
 						}
 						childStyle='bg-white rounded-md w-[700px] h-100 p-10'
 					>
@@ -186,8 +237,8 @@ const flags = () => {
 							</button>
 							<button
 								onClick={() =>
-									setToggleCreateFlagModal(
-										!toggleCreateFlagModal,
+									setIsOpenCreateFlag(
+										!isOpenCreateFlag,
 									)
 								}
 								className='shadow rounded-md p-2 bg-red-300 hover:bg-red-200 my-2'

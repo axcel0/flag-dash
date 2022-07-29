@@ -7,9 +7,11 @@ import type { NextPageWithLayout } from "./_app";
 const Home: NextPageWithLayout = () => {
 	return (
 		<>
-			<h1 className='text-5xl font-bold'>
-				Welcome to Flag Dashboard!
-			</h1>
+			<div className='p-5'>
+				<h1 className='text-5xl font-bold'>
+					Welcome to Flag Dashboard!
+				</h1>
+			</div>
 		</>
 	);
 };
