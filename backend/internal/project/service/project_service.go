@@ -27,7 +27,10 @@ func (ps *projectService) GetProjects(ctx context.Context, getProjectsReq *dto.G
 		return nil, errCount
 	}
 
+	// TODO: Set Default Value of Pagination
 	pq, errGenPQ := utils.NewPagination(getProjectsReq.Filter, getProjectsReq.Limit, getProjectsReq.PageNum, float32(itemCount))
+
+	fmt.Print(pq)
 
 	if errGenPQ != nil {
 		return nil, errGenPQ

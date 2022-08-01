@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"fmt"
+
 	"github.com/blastertwist/flag-dash/config"
 	"github.com/blastertwist/flag-dash/internal/auth"
 	"github.com/blastertwist/flag-dash/internal/dto"
@@ -109,6 +111,8 @@ func (ac *authController) DeleteUser (c *fiber.Ctx) error {
 func (ac *authController) RefreshToken(c *fiber.Ctx) error {
 	refreshTokenReq := &dto.UserRefreshTokenRequest{}
 	c.BodyParser(refreshTokenReq)
+
+	fmt.Print(refreshTokenReq)
 
 	res, err := ac.as.RefreshToken(c.Context(), refreshTokenReq)
 

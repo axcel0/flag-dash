@@ -15,6 +15,7 @@ import (
 	projectRouter "github.com/blastertwist/flag-dash/internal/project/route"
 	projectService "github.com/blastertwist/flag-dash/internal/project/service"
 	"github.com/gofiber/fiber/v2/middleware/compress"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 func (s *Server) InitializeServer () {
@@ -40,6 +41,8 @@ func (s *Server) InitializeServer () {
 	s.fiber.Use(compress.New(compress.Config{
     	Level: compress.LevelBestSpeed, // 1
 	}))
+
+	s.fiber.Use(cors.New())
 
 	// Initialize Routes
 	api := s.fiber.Group("/api")

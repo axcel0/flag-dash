@@ -13,4 +13,5 @@ func InitializeAuthRoute(r fiber.Router, mw *middlewares.MiddlewareManager, ac a
 	authGroup.Post("/login", ac.UserLogin)
 	authGroup.Post("/create-user", mw.UserAuthorized, ac.CreateUser)
 	authGroup.Get("/", mw.UserAuthorized, ac.GetUser)
+	authGroup.Post("/refresh-token", ac.RefreshToken)
 }

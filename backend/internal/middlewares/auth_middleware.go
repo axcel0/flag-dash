@@ -23,7 +23,7 @@ func (m *MiddlewareManager) UserAuthorized(c *fiber.Ctx) error {
 	fmt.Print(err)
 	if err != nil {
 		if errors.Is(err, jwt.ErrTokenExpired) {
-			return c.JSON(&dto.UserAuthorizedResponse{
+			return c.Status(fiber.ErrUnauthorized.Code).JSON(&dto.UserAuthorizedResponse{
 				Status: "401",
 				Msg: "Your token is expired, please try to re-login to proceed.",
 			})

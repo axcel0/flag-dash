@@ -14,8 +14,13 @@ type PaginationQuery struct {
 }
 
 func NewPagination(filter string, limit float32, pageNum float32, itemCount float32) (*PaginationQuery, error) {
+
 	var pages float32
-	pages = float32(math.Round(float64(itemCount) / float64(limit)))
+	if itemCount < limit {
+		pages = 1
+	} else {
+		pages = float32(math.Round(float64(itemCount) / float64(limit)))
+	}
 
 	if pageNum > pages {
 		return nil,	errors.New("Selected page number more than available pages.")

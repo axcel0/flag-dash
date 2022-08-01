@@ -39,13 +39,13 @@ func (s *authService) UserLogin(ctx context.Context, cu *dto.UserLoginRequest) (
 		return nil, errors.New("Password not same")
 	}
 
-	tokenNormal, errNormal := utils.GenerateJWT(user, s.cfg.JWT.SecretKey, 5)
+	tokenNormal, errNormal := utils.GenerateJWT(user, s.cfg.JWT.SecretKey, 1)
 
 	if errNormal != nil {
 		return nil, errNormal
 	}
 
-	tokenRefresh, errRefresh := utils.GenerateJWT(user, s.cfg.JWT.RefreshSecretKey, uint8(s.cfg.JWT.RefreshDuration))
+	tokenRefresh, errRefresh := utils.GenerateJWT(user, s.cfg.JWT.RefreshSecretKey, 30)
 
 	if errRefresh != nil {
 		return nil, errRefresh

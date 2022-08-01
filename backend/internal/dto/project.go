@@ -7,9 +7,9 @@ type NewProjectRequest struct {
 }
 
 type GetProjectsRequest struct {
-	Filter 	string `json:"filter"`
-	Limit 	float32 `json:"limit"`
-	PageNum	float32 `json:"page_num"`
+	Filter 	string `query:"filter"`
+	Limit 	float32 `query:"limit"`
+	PageNum	float32 `query:"page_num"`
 }
 
 type GetProjectRequest struct {
