@@ -1,7 +1,8 @@
 package controller
 
 import (
-	"fmt"
+	"errors"
+	"strconv"
 
 	"github.com/blastertwist/flag-dash/config"
 	"github.com/blastertwist/flag-dash/internal/auth"
@@ -41,6 +42,30 @@ func (ac *authController) UserLogin(c *fiber.Ctx) error {
 
 	c.JSON(res)
 	return nil
+}
+
+func (ac *authController) GetUserProfile(c *fiber.Ctx) error {
+	inUserID := c.Locals("user_id")
+	sUserID, ok := inUserID.(string)
+
+	if !ok {
+		return errors.New("User ID is not valid")
+	}
+	
+	iUserID, err := strconv.ParseUint(sUserID, 32, 32)
+
+	if err != nil {
+		return err
+	}
+
+
+	res, err := ac.as.GetUserByID(c.Context(), uint32(iUserID))
+
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(res)
 }
 
 // CreateUser Function to create a new user.
@@ -111,8 +136,6 @@ func (ac *authController) DeleteUser (c *fiber.Ctx) error {
 func (ac *authController) RefreshToken(c *fiber.Ctx) error {
 	refreshTokenReq := &dto.UserRefreshTokenRequest{}
 	c.BodyParser(refreshTokenReq)
-
-	fmt.Print(refreshTokenReq)
 
 	res, err := ac.as.RefreshToken(c.Context(), refreshTokenReq)
 

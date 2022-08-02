@@ -10,6 +10,22 @@ type UserLoginResponse struct {
 	RefreshJWT string `json:"refreshToken"`
 }
 
+type GetUserProfileResponse struct {
+	Status	string `json:"status"`
+	User 	struct {
+		ID		uint32 `json:"id"`
+		Email 	string `json:"email"`
+		Profile struct {
+			FirstName 	string `json:"firstName"`
+			LastName 	string `json:"lastName"`
+		} `json:"userProfile"`
+		Role struct {
+			Name 	string `json:"Name"`
+			Level 	uint32 `json:"Level"`
+		} `json:"userRole"`
+	}
+}
+
 type CreateUserRequest struct {
 	Email 		string 		`json:"email"`
 	Password 	string 		`json:"password"`

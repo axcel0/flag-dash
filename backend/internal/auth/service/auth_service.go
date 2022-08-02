@@ -174,6 +174,27 @@ func (s *authService) GetUserByEmail(ctx context.Context, gu *dto.GetUserRequest
 	return userRes, nil
 }
 
+func (s *authService) GetUserByID(ctx context.Context, userID uint32) (*dto.GetUserProfileResponse, error) {
+	u, err := s.r.FindByID(ctx, &dao.User{ID: userID})
+
+	if err != nil {
+		return nil, err
+	}
+
+	userRes := &dto.GetUserProfileResponse{
+		Status: "200",
+	}
+	
+	userRes.User.ID = u.ID
+	userRes.User.Email = u.Email
+	userRes.User.Profile.FirstName = u.FirstName
+	userRes.User.Profile.LastName = u.LastName
+	userRes.User.Role.Name = u.RoleName
+	userRes.User.Role.Level = u.RoleLevel
+
+	return userRes, nil
+}
+
 func (s *authService) DeleteUser(ctx context.Context, deleteUserReq *dto.DeleteUserRequest) (*dto.DeleteUserResponse, error) {
 	err := s.r.Delete(ctx, &dao.User{ID: deleteUserReq.UserID})
 
