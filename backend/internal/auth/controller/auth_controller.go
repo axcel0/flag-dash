@@ -143,6 +143,5 @@ func (ac *authController) RefreshToken(c *fiber.Ctx) error {
 		return err
 	}
 
-	c.JSON(res)
-	return nil
+	return c.Status(fiber.StatusCreated).JSON(res)
 }

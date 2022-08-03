@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/blastertwist/flag-dash/internal/dto"
 	"github.com/blastertwist/flag-dash/pkg/utils"
@@ -13,14 +12,13 @@ import (
 func (m *MiddlewareManager) UserAuthorized(c *fiber.Ctx) error {
 	token := c.Get("Authorization")
 	if token == "" {
-		return 	c.JSON(&dto.UserAuthorizedResponse{
+		return 	c.Status(fiber.ErrUnauthorized.Code).JSON(&dto.UserAuthorizedResponse{
 			Status: "401",
 			Msg: "There is no token found, please try to re-login to proceed.",
 		})
 	}
 
 	isValid, claims, err := utils.VerifyJWT(token, m.cfg.JWT.SecretKey)
-	fmt.Print(err)
 	if err != nil {
 		if errors.Is(err, jwt.ErrTokenExpired) {
 			return c.Status(fiber.ErrUnauthorized.Code).JSON(&dto.UserAuthorizedResponse{
