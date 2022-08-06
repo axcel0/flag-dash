@@ -3,6 +3,7 @@ package controller
 import (
 	"errors"
 	"strconv"
+	"time"
 
 	"github.com/blastertwist/flag-dash/config"
 	"github.com/blastertwist/flag-dash/internal/auth"
@@ -36,12 +37,21 @@ func (ac *authController) UserLogin(c *fiber.Ctx) error {
 	res, err := ac.as.UserLogin(c.Context(), req)
 
 	if err != nil {
-		c.JSON("Error")
-		return err
+		return c.Status(fiber.ErrUnauthorized.Code).JSON(err)
 	}
 
-	c.JSON(res)
-	return nil
+	expirationTime := time.Now().Add(time.Duration(2) * time.Minute)
+
+	jwtCookie := &fiber.Cookie{
+		Name: "refreshToken_cookie",
+		Value: res.RefreshJWT,
+		Secure: false,
+		HTTPOnly: true,
+		Expires: expirationTime,
+	}
+	c.Cookie(jwtCookie)
+
+	return c.Status(fiber.StatusOK).JSON(res)
 }
 
 func (ac *authController) GetUserProfile(c *fiber.Ctx) error {
@@ -135,12 +145,10 @@ func (ac *authController) DeleteUser (c *fiber.Ctx) error {
 
 func (ac *authController) RefreshToken(c *fiber.Ctx) error {
 	refreshTokenReq := &dto.UserRefreshTokenRequest{}
-	c.BodyParser(refreshTokenReq)
-
 	res, err := ac.as.RefreshToken(c.Context(), refreshTokenReq)
 
 	if err != nil {
-		return err
+		return c.Status(fiber.ErrUnauthorized.Code).JSON(err)
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(res)
