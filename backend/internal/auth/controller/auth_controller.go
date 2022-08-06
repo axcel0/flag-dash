@@ -145,6 +145,7 @@ func (ac *authController) DeleteUser (c *fiber.Ctx) error {
 
 func (ac *authController) RefreshToken(c *fiber.Ctx) error {
 	refreshTokenReq := &dto.UserRefreshTokenRequest{}
+	refreshTokenReq.RefreshToken = c.Cookies("refreshToken_cookie");
 	res, err := ac.as.RefreshToken(c.Context(), refreshTokenReq)
 
 	if err != nil {
