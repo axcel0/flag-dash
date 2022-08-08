@@ -45,7 +45,8 @@ func (ac *authController) UserLogin(c *fiber.Ctx) error {
 	jwtCookie := &fiber.Cookie{
 		Name: "refreshToken_cookie",
 		Value: res.RefreshJWT,
-		Secure: false,
+		SameSite: "None",
+		Secure: true,
 		HTTPOnly: true,
 		Expires: expirationTime,
 	}
