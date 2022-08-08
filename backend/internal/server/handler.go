@@ -42,7 +42,13 @@ func (s *Server) InitializeServer () {
     	Level: compress.LevelBestSpeed, // 1
 	}))
 
-	s.fiber.Use(cors.New())
+
+	s.fiber.Use(cors.New(cors.Config{
+		AllowOrigins: 	  "*",
+		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH",
+    	AllowHeaders:     "",
+    	AllowCredentials: true,
+	}))
 
 	// Initialize Routes
 	api := s.fiber.Group("/api")
