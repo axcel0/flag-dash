@@ -3,7 +3,7 @@ package dao
 import "database/sql"
 
 type Project struct {
-	ID		uint32				`db:"id"`
-	Name 	string				`db:"name"`
-	UpdateTime	sql.NullTime	`db:"update_time"`
+	ID		uint32				`json:"id" db:"id"`
+	Name 	string				`json:"name" db:"name"`
+	UpdateTime	sql.NullTime	`json:"updated_at" db:"update_time"`
 }
