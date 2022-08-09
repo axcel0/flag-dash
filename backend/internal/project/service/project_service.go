@@ -54,7 +54,6 @@ func (ps *projectService) GetProject(ctx context.Context, getProjectReq *dto.Get
 
 	project, err := ps.pr.GetProject(ctx, &dao.Project{ID:uint32(getProjectReq.ID)})
 	if err != nil {
-		fmt.Print(err)
 		return nil, err
 	}
 	return &dto.GetProjectResponse{

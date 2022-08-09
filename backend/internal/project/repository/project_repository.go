@@ -63,8 +63,8 @@ func (pr *projectRepository) GetProjects(ctx context.Context, pq *utils.Paginati
 
 func (pr *projectRepository) GetProject(ctx context.Context, project *dao.Project) (*dao.Project, error){
 
-	var p *dao.Project
-	if err := pr.db.QueryRowxContext(ctx, GetProjectQuery).StructScan(p); err != nil {
+	p := &dao.Project{}
+	if err := pr.db.QueryRowxContext(ctx, GetProjectQuery, project.ID).StructScan(p); err != nil {
 		return nil, err
 	}
 

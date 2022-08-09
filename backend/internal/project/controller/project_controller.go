@@ -17,13 +17,10 @@ func NewProjectController(cfg *config.Config, ps project.Service) project.Contro
 }
 
 func (pc *projectController) GetProjects (c *fiber.Ctx) error {
-
 	getProjectsReq := &dto.GetProjectsRequest{}
 	if err := c.QueryParser(getProjectsReq); err != nil {
             return err
         }
-
-
 	res, err := pc.ps.GetProjects(c.Context(), getProjectsReq)
 	
 	if err != nil {
@@ -33,9 +30,9 @@ func (pc *projectController) GetProjects (c *fiber.Ctx) error {
 	return c.JSON(res)
 }
 
-func (pc *projectController) GetProject (c *fiber.Ctx) error {
+func (pc *projectController) GetProjectByID (c *fiber.Ctx) error {
 	getProjectReq := &dto.GetProjectRequest{}
-	c.BodyParser(getProjectReq)
+	c.ParamsParser(getProjectReq);
 
 	res, err := pc.ps.GetProject(c.Context(), getProjectReq)
 
@@ -43,8 +40,7 @@ func (pc *projectController) GetProject (c *fiber.Ctx) error {
 		return err
 	}
 
-	c.JSON(res)
-	return nil
+	return c.JSON(res)
 }
 
 func (pc *projectController) NewProject (c *fiber.Ctx) error {

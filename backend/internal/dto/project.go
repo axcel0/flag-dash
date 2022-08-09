@@ -13,7 +13,7 @@ type GetProjectsRequest struct {
 }
 
 type GetProjectRequest struct {
-	ID	uint8 `json:"id"`
+	ID	float32 `params:"id" json:"id"`
 }
 
 type EditProjectRequest struct {
