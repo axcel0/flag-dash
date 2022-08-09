@@ -17,12 +17,12 @@ type GetProjectRequest struct {
 }
 
 type EditProjectRequest struct {
-	ID		uint32	
+	ID		uint32	`params:"id"`
 	Name	string  `json:"name"`
 }
 
 type DeleteProjectRequest struct {
-	ID	uint32	`json:"id"`
+	ID	uint32	`json:"id" params:"id"`
 }
 
 type GetProjectsResponse struct {

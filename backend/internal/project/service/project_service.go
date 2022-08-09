@@ -76,7 +76,6 @@ func (ps *projectService) NewProject(ctx context.Context, newProjectReq *dto.New
 }
 
 func (ps *projectService) EditProject(ctx context.Context, editProjectReq *dto.EditProjectRequest) (*dto.EditProjectResponse, error) {
-	
 	editedProject, errEdit := ps.pr.EditProject(ctx, &dao.Project{ID:editProjectReq.ID, Name: editProjectReq.Name})
 
 	if errEdit != nil {

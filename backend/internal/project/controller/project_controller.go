@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"database/sql"
+
 	"github.com/blastertwist/flag-dash/config"
 	"github.com/blastertwist/flag-dash/internal/dto"
 	"github.com/blastertwist/flag-dash/internal/project"
@@ -59,6 +61,7 @@ func (pc *projectController) NewProject (c *fiber.Ctx) error {
 
 func (pc *projectController) EditProject (c *fiber.Ctx) error {
 	editProjectReq := &dto.EditProjectRequest{}
+	c.ParamsParser(editProjectReq);
 	c.BodyParser(editProjectReq)
 
 	projectID, err := c.ParamsInt("id")
@@ -80,21 +83,20 @@ func (pc *projectController) EditProject (c *fiber.Ctx) error {
 
 func (pc *projectController) DeleteProject (c *fiber.Ctx) error {
 	deleteProjectReq := &dto.DeleteProjectRequest{}
-	projectID, err := c.ParamsInt("id")
-	deleteProjectReq.ID = uint32(projectID)
-	if err != nil {
-		return nil
-	}
+	c.ParamsParser(deleteProjectReq)
 
-	err = pc.ps.DeleteProject(c.Context(), deleteProjectReq)
+	err := pc.ps.DeleteProject(c.Context(), deleteProjectReq)
 
 	if err != nil {
-		return err
+		if err.Error() == sql.ErrNoRows.Error() {
+			return c.Status(fiber.StatusNotFound).JSON("Project Not Found.");
+		} else {
+			return err
+		}
 	}
 
-	c.JSON(&dto.DeleteProjectResponse{
+	return 	c.Status(fiber.StatusOK).JSON(&dto.DeleteProjectResponse{
 		Status: "200",
 		Msg: "Delete Project Success",
 	})
-	return nil
 }
