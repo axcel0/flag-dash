@@ -18,7 +18,6 @@ const projectApiSlice = apiSlice.injectEndpoints({
 			query: ({ currPage = 1, limit = 5 }) =>
 				`/project/?limit=${limit}&page_num=${currPage}`,
 			providesTags: (result, error, currPage) => {
-				console.log("Result Porjectts Query: ", result);
 				return result
 					? [
 							...result.projects.map(({ id }) => ({
@@ -30,7 +29,58 @@ const projectApiSlice = apiSlice.injectEndpoints({
 					: [{ type: "Projects", id: "PARTIAL-LIST" }];
 			},
 		}),
+		getPostById: builder.query({
+			query: (id) => `/project/${id}`,
+			providesTags: (result, error, id) => {
+				return [
+					{ type: "Projects" as const, id },
+					{ type: "Projects", id: "PARTIAL-LIST" },
+				];
+			},
+		}),
+		newPost: builder.mutation({
+			query: (values) => ({
+				url: "/project/new-project",
+				method: "POST",
+				body: { ...values },
+			}),
+			invalidatesTags: (result, error) => [
+				{ type: "Projects", id: "PARTIAL-LIST" },
+			],
+		}),
+		editPost: builder.mutation({
+			query: (values) => ({
+				url: `/project/${values.id}`,
+				method: "PATCH",
+				body: { ...values },
+			}),
+			invalidatesTags: (result, error, args) => {
+				return [
+					{ type: "Projects", id: args.id },
+					{ type: "Projects", id: "PARTIAL-LIST" },
+				];
+			},
+		}),
+		deletePost: builder.mutation({
+			query: ({ id }) => ({
+				url: `/project/${id}`,
+				method: "DELETE",
+				body: { id },
+			}),
+			invalidatesTags: (result, error, args) => {
+				return [
+					{ type: "Projects", id: args.id },
+					{ type: "Projects", id: "PARTIAL-LIST" },
+				];
+			},
+		}),
 	}),
 });
 
-export const { useGetPostsQuery } = projectApiSlice;
+export const {
+	useGetPostsQuery,
+	useGetPostByIdQuery,
+	useNewPostMutation,
+	useEditPostMutation,
+	useDeletePostMutation,
+} = projectApiSlice;
