@@ -4,14 +4,14 @@ import "github.com/blastertwist/flag-dash/internal/dao"
 
 // Flag Request Structs
 type GetFlagsRequest struct {
-	ProjectID 	uint32	`json:"project_id"`
-	Filter		string	`json:"filter"`
-	Limit		float32	`json:"limit"`
-	PageNum		float32	`json:"page_num"`
+	ProjectID 	uint32	`json:"project_id" query:"project_id"`
+	Filter		string	`json:"filter" query:"filter"`
+	Limit		float32	`json:"limit" query:"limit"`
+	PageNum		float32	`json:"page_num" query:"page_num"`
 }
 
 type GetFlagRequest struct {
-	ID	uint32	`json:"id"`
+	ID	uint32	`json:"id" params:"id"`
 }
 
 type NewFlagRequest struct {
@@ -21,13 +21,13 @@ type NewFlagRequest struct {
 }
 
 type EditFlagRequest struct {
-	ID		uint32	`json:"id"`
+	ID		uint32	`json:"id" params:"id"`
 	Name	string	`json:"name"`
 	Active	bool	`json:"active"`
 }
 
 type DeleteFlagRequest struct {
-	ID	uint32	`json:"id"`
+	ID	uint32	`json:"id" params:"id"`
 }
 
 // Flag Context Request structs
@@ -39,7 +39,7 @@ type GetFlagContextsRequest struct {
 }
 
 type GetFlagContextRequest struct {
-	ID	uint32	`json:"id"`
+	ID	uint32	`json:"id" params:"id"`
 }
 
 type NewFlagContextRequest struct {
@@ -50,19 +50,19 @@ type NewFlagContextRequest struct {
 }
 
 type EditFlagContextRequest struct {
-	ID			uint32	`json:"id"`
+	ID			uint32	`json:"id" params:"id"`
 	Name		string 	`json:"name"`
 	Condition	string	`json:"condition"`
 	Value		string	`json:"value"`
 }
 
 type DeleteFlagContextRequest struct {
-	ID	uint32	`json:"id"`
+	ID	uint32	`json:"id" params:"id"`
 }
 
 // Flag Response Structs
 type GetFlagsResponse struct {
-	Flags    []*dao.Flag	`json:"flags"`
+	Flags    []*dao.Flag		`json:"flags"`
 	Limit		float32			`json:"limit"`
 	PageNum		float32			`json:"page_num"`
 	MaxPage		float32			`json:"max_page"`
@@ -90,10 +90,10 @@ type DeleteFlagResponse struct {
 
 // Flag Context Response Structs
 type GetFlagContextsResponse struct {
-	FlagContexts   []*dao.FlagContext	`json:"flag_contexts"`
-	Limit		float32			`json:"limit"`
-	PageNum		float32			`json:"page_num"`
-	MaxPage		float32			`json:"max_page"`
+	FlagContexts    []*dao.FlagContext	`json:"flag_contexts"`
+	Limit			float32				`json:"limit"`
+	PageNum			float32				`json:"page_num"`
+	MaxPage			float32				`json:"max_page"`
 }
 
 type GetFlagContextResponse struct {

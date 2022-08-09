@@ -18,27 +18,26 @@ func NewFlagController(cfg *config.Config, fs flag.Service) flag.Controller{
 
 func (fc *flagController) GetFlags(c *fiber.Ctx) error {
 	userReq := &dto.GetFlagsRequest{}
-	c.BodyParser(&userReq)
+	c.QueryParser(userReq)
 
 	res, err := fc.fs.GetFlags(c.Context(), userReq)
 	if err != nil {
 		return err
 	}
-	c.JSON(res)
-	return nil
+	
+	return c.Status(fiber.StatusOK).JSON(res)
 }
 
 func (fc *flagController) GetFlag(c *fiber.Ctx) error {
 	userReq := &dto.GetFlagRequest{}
-	c.BodyParser(&userReq)
+	c.ParamsParser(userReq)
 
 	res, err := fc.fs.GetFlag(c.Context(), userReq)
 	if err != nil {
 		return err
 	}
 
-	c.JSON(res)
-	return nil
+	return c.Status(fiber.StatusOK).JSON(res)
 }
 
 func (fc *flagController) NewFlag(c *fiber.Ctx) error {
@@ -50,32 +49,30 @@ func (fc *flagController) NewFlag(c *fiber.Ctx) error {
 		return err
 	}
 
-	c.JSON(res)
-	return nil
+	return c.Status(fiber.StatusCreated).JSON(res)
 }
 
 func (fc *flagController) EditFlag(c *fiber.Ctx) error {
 	userReq := &dto.EditFlagRequest{}
 	c.BodyParser(&userReq)
+	c.ParamsParser(userReq)
 
 	res, err := fc.fs.EditFlag(c.Context(), userReq)
 	if err != nil {
 		return err
 	}
 
-	c.JSON(res)
-	return nil
+	return c.Status(fiber.StatusOK).JSON(res)
 }
 
 func (fc *flagController) DeleteFlag(c *fiber.Ctx) error {
 	userReq := &dto.DeleteFlagRequest{}
-	c.BodyParser(&userReq)
+	c.ParamsParser(userReq)
 
 	res, err := fc.fs.DeleteFlag(c.Context(), userReq)
 	if err != nil {
 		return err
 	}
 
-	c.JSON(res)
-	return nil
+	return c.Status(fiber.StatusOK).JSON(res)
 }
