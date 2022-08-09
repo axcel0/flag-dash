@@ -5,4 +5,5 @@ export { default as Sidebar } from "./Sidebar/Sidebar";
 export { default as Table } from "./Table/Table";
 export { default as NewTable } from "./Tables/NewTable";
 export { default as ToggleButton } from "./ToggleButton/ToggleButton";
+export { default as CircularLoading } from "./CircularLoading/CircularLoading";
 export { default as Layout } from "./Layout";
