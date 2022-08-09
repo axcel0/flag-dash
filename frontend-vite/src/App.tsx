@@ -9,8 +9,8 @@ function App() {
 	return (
 		<Routes>
 			<Route path='/login' element={<Login />} />
-			<Route element={<RequireAuth />}>
-				<Route element={<Layout />}>
+			<Route element={<Layout />}>
+				<Route element={<RequireAuth />}>
 					<Route path='/' element={<h1>Hello Home!</h1>} />
 					<Route path='/projects' element={<Projects />} />
 					<Route path='/users' element={<Users />} />

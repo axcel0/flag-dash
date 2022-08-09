@@ -1,37 +1,22 @@
 import React, { useState, useEffect } from "react";
-import APIClient from "../../../utils/APIClient";
 
 import { Layout, Card, Modal } from "../../../components";
+import CircularLoading from "../../../components/CircularLoading/CircularLoading";
+import { useGetPostsQuery } from "../../../redux/features/projects/projectsApiSlice";
 
 const projects = () => {
 	const [newProjModal, setNewProjModal] = useState(false);
-
-	const [projects, setProjects] = useState<any[]>([]);
 
 	const [maxPage, setMaxPage] = useState(50);
 	const [currPage, setCurrPage] = useState(1);
 	const [itemNum, setItemNum] = useState(12);
 
-	const fetchData = async (data: any) => {
-		const res = await APIClient.get(
-			"http://127.0.0.1:3001/api/v1/project/",
-			{
-				params: {
-					filter: data.filter,
-					limit: data.limit,
-					page_num: data.page_num,
-				},
-			},
-		);
-		setCurrPage(res.data.page_num);
-		setMaxPage(res.data.max_page);
-		setItemNum(res.data.limit);
-		setProjects(res.data.projects);
-	};
+	const { data, isLoading, isError } = useGetPostsQuery<any>({
+		currPage,
+		limit: itemNum,
+	});
 
-	useEffect(() => {
-		//fetchData({ filter: "", limit: itemNum, page_num: currPage });
-	}, []);
+	if (isLoading) return <CircularLoading />;
 
 	return (
 		<>
@@ -110,18 +95,18 @@ const projects = () => {
 			</div>
 			<div className=' bg-white shadow rounded-md my-3 mx-2 p-5 h-[550px]'>
 				<div className='flex flex-row flex-wrap max-h-[475px] overflow-auto p-3'>
-					{projects
-						? projects.map((data, index) => (
+					{data?.projects
+						? data?.projects.map((data: any, index: any) => (
 								<Card
-									key={data.ID}
+									key={index}
 									childStyle='flex-1 basis-4/12 shadow-lg rounded-md hover:bg-gray-200'
 								>
 									<div className='p-5' key={index}>
 										<h4 className='text-2xl font-bold text-gray-300'>
-											{data.ID}
+											{data.id}
 										</h4>
 										<h3 className='text-3xl'>
-											{data.Name}
+											{data.name}
 										</h3>
 									</div>
 								</Card>

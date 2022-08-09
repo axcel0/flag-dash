@@ -6,7 +6,7 @@ import Modal from "../../components/Modal/Modal";
 
 import { createColumnHelper } from "@tanstack/react-table";
 
-import APIClient from "../../utils/APIClient";
+// import APIClient from "../../utils/APIClient";
 
 type User = {
 	id: number;
@@ -56,18 +56,17 @@ const users = () => {
 	const [maxItem, setMaxItem] = useState(12);
 
 	const fetchData = async (data: any) => {
-		const res = await APIClient.get(
-			"http://127.0.01:3001/api/v1/project/",
-			{
-				params: {
-					filter: data.filter,
-					limit: data.limit,
-					page_num: data.page_num,
-				},
-			},
-		);
-
-		setData(res.data);
+		// const res = await APIClient.get(
+		// 	"http://127.0.01:3001/api/v1/project/",
+		// 	{
+		// 		params: {
+		// 			filter: data.filter,
+		// 			limit: data.limit,
+		// 			page_num: data.page_num,
+		// 		},
+		// 	},
+		// );
+		// setData(res.data);
 	};
 
 	useEffect(() => {

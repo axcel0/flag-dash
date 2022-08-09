@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
-
+import { useSelector, useDispatch } from "react-redux";
 import { useFormik } from "formik";
 
 import { useNavigate } from "react-router-dom";
 
-import APIClient from "../utils/APIClient";
+import CircularLoading from "../components/CircularLoading/CircularLoading";
+import { useLoginMutation } from "../redux/features/auth/authApiSlice";
+import { userLogin } from "../redux/features/auth/authSlice";
 
 const Login = () => {
 	const navigate = useNavigate();
+
+	const dispatch = useDispatch();
+	const [login, { isLoading }] = useLoginMutation();
 
 	const formik = useFormik({
 		initialValues: {
@@ -15,18 +20,21 @@ const Login = () => {
 			password: "",
 		},
 		onSubmit: async (values) => {
-			const res = await APIClient.post(
-				"http://127.0.0.1:3001/api/v1/auth/login",
-				{
+			try {
+				const resData = await login({
 					email: values.email,
 					password: values.password,
-				},
-			);
+				}).unwrap();
 
-			localStorage.setItem("token", res.data.token);
-			localStorage.setItem("refreshToken", res.data.refreshToken);
+				dispatch(userLogin(resData.token));
+				navigate("/");
+			} catch (err: any) {
+				console.log(err.message);
+			}
 		},
 	});
+
+	if (isLoading) return <CircularLoading />;
 
 	return (
 		<div className='flex justify-center items-center min-h-screen'>

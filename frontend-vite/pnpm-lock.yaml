@@ -9,6 +9,7 @@ specifiers:
   autoprefixer: ^10.4.8
   axios: ^0.27.2
   formik: ^2.2.9
+  jwt-decode: ^3.1.2
   postcss: ^8.4.14
   react: ^18.2.0
   react-dom: ^18.2.0
@@ -25,6 +26,7 @@ dependencies:
   '@tanstack/react-table': 8.5.2_biqbaboplfbrettd7655fr4n2y
   axios: 0.27.2
   formik: 2.2.9_react@18.2.0
+  jwt-decode: 3.1.2
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-icons: 4.4.0_react@18.2.0
@@ -1055,6 +1057,10 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
     dev: true
+
+  /jwt-decode/3.1.2:
+    resolution: {integrity: sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==}
+    dev: false
 
   /lilconfig/2.0.6:
     resolution: {integrity: sha512-9JROoBW7pobfsx+Sq2JsASvCo6Pfo6WWoUW79HuB1BCoBXD4PLWJPqDF6fNj67pqBYTbAHkE57M1kS/+L1neOg==}

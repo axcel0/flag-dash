@@ -3,9 +3,10 @@ import { FaUserCircle } from "react-icons/fa";
 
 interface NavbarProps {
 	openSide: any;
+	data?: any;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ openSide }) => {
+const Navbar: React.FC<NavbarProps> = ({ openSide, data }) => {
 	return (
 		<div className='flex flex-row items-center border-b-2'>
 			<div className='mr-auto'>
@@ -19,7 +20,7 @@ const Navbar: React.FC<NavbarProps> = ({ openSide }) => {
 				</div>
 			</div>
 			<div className='flex ml-auto mr-3 items-center'>
-				<p className='mr-3'>Firstname Lastname</p>
+				<p className='mr-3'>{`${data?.userProfile?.firstName}  ${data?.userProfile?.lastName}`}</p>
 				<FaUserCircle size={40} />
 			</div>
 		</div>
