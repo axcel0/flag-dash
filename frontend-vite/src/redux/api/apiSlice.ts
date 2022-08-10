@@ -20,7 +20,8 @@ const baseQueryWithReauth = async (
 	extraOptions: any,
 ) => {
 	let result = await baseQuery(args, api, extraOptions);
-	console.log("First Result:", result);
+	console.log("First result", result);
+
 	if (result.error?.status === 401) {
 		let refreshResult = await baseQuery(
 			"/auth/refresh-token",
@@ -32,6 +33,7 @@ const baseQueryWithReauth = async (
 			localStorage.setItem("token", data?.token as string);
 
 			result = await baseQuery(args, api, extraOptions);
+			console.log("result:", result);
 		} else {
 			api.dispatch(userLogout());
 		}
@@ -40,7 +42,7 @@ const baseQueryWithReauth = async (
 };
 
 export const apiSlice = createApi({
-	tagTypes: ["Users", "Projects"],
+	tagTypes: ["Users", "Projects", "Flags"],
 	baseQuery: baseQueryWithReauth,
 	endpoints: (builder) => ({}),
 });
