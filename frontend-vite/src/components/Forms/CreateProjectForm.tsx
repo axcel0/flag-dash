@@ -1,15 +1,12 @@
 import { useFormik } from "formik";
-import {
-	useGetPostByIdQuery,
-	useNewPostMutation,
-} from "../../redux/features/projects/projectsApiSlice";
+import { useNewProjectMutation } from "../../redux/features/projects/projectsApiSlice";
 
 const CreateProjectForm = ({
 	handleSuccess,
 	handleFailed,
 	handleCancel,
 }: any) => {
-	const [newPost, { isLoading: isLoadingAdd }] = useNewPostMutation();
+	const [newPost, { isLoading: isLoadingAdd }] = useNewProjectMutation();
 	const newProjForm = useFormik({
 		initialValues: {
 			name: "",

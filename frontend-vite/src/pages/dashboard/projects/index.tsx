@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import { Layout, Card, Modal, CircularLoading } from "../../../components";
 
-import { useGetPostsQuery } from "../../../redux/features/projects/projectsApiSlice";
+import { useGetProjectsQuery } from "../../../redux/features/projects/projectsApiSlice";
 
 import { CreateProjectForm } from "../../../components/Forms";
 
@@ -21,7 +21,7 @@ const projects = () => {
 		data,
 		isLoading: isLoadingFetch,
 		isError,
-	} = useGetPostsQuery<any>({
+	} = useGetProjectsQuery<any>({
 		currPage,
 		limit: itemNum,
 	});
