@@ -1,22 +1,32 @@
 import React, { useState, useEffect } from "react";
 
-import { Layout, Card, Modal } from "../../../components";
-import CircularLoading from "../../../components/CircularLoading/CircularLoading";
+import { Link } from "react-router-dom";
+
+import { Layout, Card, Modal, CircularLoading } from "../../../components";
+
 import { useGetPostsQuery } from "../../../redux/features/projects/projectsApiSlice";
+
+import { CreateProjectForm } from "../../../components/Forms";
 
 const projects = () => {
 	const [newProjModal, setNewProjModal] = useState(false);
+	const [successModal, setSuccessModal] = useState(false);
+	const [createSuccess, setCreateSuccess] = useState(false);
 
 	const [maxPage, setMaxPage] = useState(50);
 	const [currPage, setCurrPage] = useState(1);
 	const [itemNum, setItemNum] = useState(12);
 
-	const { data, isLoading, isError } = useGetPostsQuery<any>({
+	const {
+		data,
+		isLoading: isLoadingFetch,
+		isError,
+	} = useGetPostsQuery<any>({
 		currPage,
 		limit: itemNum,
 	});
 
-	if (isLoading) return <CircularLoading />;
+	if (isLoadingFetch) return <CircularLoading />;
 
 	return (
 		<>
@@ -101,42 +111,79 @@ const projects = () => {
 									key={index}
 									childStyle='flex-1 basis-4/12 shadow-lg rounded-md hover:bg-gray-200'
 								>
-									<div className='p-5' key={index}>
-										<h4 className='text-2xl font-bold text-gray-300'>
-											{data.id}
-										</h4>
-										<h3 className='text-3xl'>
-											{data.name}
-										</h3>
-									</div>
+									<Link
+										to={`/projects/${data.id}`}
+										key={data.id}
+									>
+										<div
+											className='p-5'
+											key={index}
+										>
+											<h4 className='text-2xl font-bold text-gray-300'>
+												{data.id}
+											</h4>
+											<h3 className='text-3xl'>
+												{data.name}
+											</h3>
+										</div>
+									</Link>
 								</Card>
 						  ))
 						: null}
 				</div>
 			</div>
+			{/* Create Project Modal */}
 			<Modal
 				onClose={() => setNewProjModal(false)}
 				visible={newProjModal}
 				childStyle='flex flex-col justify-start items-start bg-white rounded-md h-62 w-80 p-5'
 			>
-				<h1 className='text-2xl font-bold'>Create Project</h1>
-				<input
-					type='text'
-					className='rounded border p-3 my-3'
-					placeholder='Project Name...'
+				<CreateProjectForm
+					handleSuccess={() => {
+						setNewProjModal(false);
+						setCreateSuccess(true);
+						setSuccessModal(true);
+					}}
+					handleFailed={() => {
+						setNewProjModal(false);
+						setCreateSuccess(false);
+						setSuccessModal(true);
+					}}
+					handleCancel={() => {
+						setNewProjModal(false);
+					}}
 				/>
-				<div>
-					<button className='rounded bg-green-300 mr-2 p-2'>
-						<p className='text-xl font-medium'>Create</p>
-					</button>
-					<button
-						onClick={() => setNewProjModal(false)}
-						className='rounded bg-red-200 mx-2 p-2'
-					>
-						<p className='text-xl font-medium'>Cancel</p>
-					</button>
-				</div>
 			</Modal>
+			{/* Response Modals */}
+			{createSuccess ? (
+				<Modal
+					onClose={() => setSuccessModal(!successModal)}
+					visible={successModal}
+					childStyle='flex flex-col justify-start items-start bg-white rounded-md h-62 w-80 p-5'
+				>
+					<h1>Project successfully created.</h1>
+					<button
+						className='rounded shadow p-2 bg-green-200 mx-2'
+						onClick={() => setSuccessModal(!successModal)}
+					>
+						<p className='text-xl font-medium'>Close</p>
+					</button>
+				</Modal>
+			) : (
+				<Modal
+					onClose={() => setSuccessModal(!successModal)}
+					visible={successModal}
+					childStyle='flex flex-col justify-start items-start bg-white rounded-md h-62 w-80 p-5'
+				>
+					<h1>Project failed to create.</h1>
+					<button
+						className='rounded shadow p-2 bg-red-200 mx-2'
+						onClick={() => setSuccessModal(!successModal)}
+					>
+						<p className='text-xl font-medium'>Close</p>
+					</button>
+				</Modal>
+			)}
 		</>
 	);
 };
