@@ -1,12 +1,12 @@
 package repository
 
-const CountFlagItemQuery = `SELECT COUNTS(*) FROM flags;`
+const CountFlagItemQuery = `SELECT COUNT(*) FROM flags;`
 const GetFlagsQuery = `SELECT * FROM flags WHERE project_id = $1 AND name ILIKE '%' || $2 || '%' OFFSET $3 LIMIT $4;`
 const GetFlagQuery = `SELECT * FROM flags WHERE id = $1;`
-const NewFlagQuery = `INSERT INTO flags (project_id,name,active) VALUES ($1,$2,$3);`
+const NewFlagQuery = `INSERT INTO flags (project_id,name,active) VALUES ($1,$2,$3) RETURNING *;`
 const EditFlagQuery = `UPDATE flags 
 						SET name = COALESCE(NULLIF($1,''), name),
-							active = COALESCE(NULLIF($2,''), active)
+							active = COALESCE($2, active)
 						WHERE id = $3 RETURNING *;`
 const DeleteFlagQuery = `DELETE flags WHERE id = $1;`
 

@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"fmt"
+
 	"github.com/blastertwist/flag-dash/config"
 	"github.com/blastertwist/flag-dash/internal/dto"
 	"github.com/blastertwist/flag-dash/internal/flag"
@@ -43,12 +45,13 @@ func (fc *flagController) GetFlag(c *fiber.Ctx) error {
 func (fc *flagController) NewFlag(c *fiber.Ctx) error {
 	userReq := &dto.NewFlagRequest{}
 	c.BodyParser(&userReq)
+	fmt.Print(userReq)
 
 	res, err := fc.fs.NewFlag(c.Context(), userReq)
 	if err != nil {
-		return err
+		fmt.Print(err)
+		return c.Status(fiber.ErrBadRequest.Code).JSON(err);
 	}
-
 	return c.Status(fiber.StatusCreated).JSON(res)
 }
 
@@ -57,8 +60,10 @@ func (fc *flagController) EditFlag(c *fiber.Ctx) error {
 	c.BodyParser(&userReq)
 	c.ParamsParser(userReq)
 
+
 	res, err := fc.fs.EditFlag(c.Context(), userReq)
 	if err != nil {
+		fmt.Print(err);
 		return err
 	}
 

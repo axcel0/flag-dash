@@ -70,7 +70,7 @@ func (fr *flagRepo) NewFlag(ctx context.Context, flag *dao.Flag) (*dao.Flag, err
 
 func (fr *flagRepo) EditFlag(ctx context.Context, flag *dao.Flag) (*dao.Flag, error) {
 	f := &dao.Flag{}
-	if err:= fr.db.QueryRowxContext(ctx, EditFlagQuery, flag.Name, flag.Active).StructScan(f); err != nil {
+	if err:= fr.db.QueryRowxContext(ctx, EditFlagQuery, flag.Name, flag.Active, flag.ID).StructScan(f); err != nil {
 		return nil, err
 	}
 	return f, nil
