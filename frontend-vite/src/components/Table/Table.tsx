@@ -1,29 +1,30 @@
 import React from "react";
 
 interface TableProps {
-	heads: string[];
-	values: any[];
+	columnDef: any[];
+	values?: any[];
 }
 
-const Table: React.FC<TableProps> = ({ heads, values }) => {
+const Table: React.FC<TableProps> = ({ columnDef, values }) => {
 	return (
-		<table className='table-auto text-left'>
+		<table className='table-auto w-full'>
 			<thead>
-				<tr>
-					{heads.map((head, index) => (
-						<th key={index} className='px-4 py-2'>
-							{head}
+				<tr className='text-left'>
+					{columnDef.map((col, index) => (
+						<th
+							key={index}
+							className={`w-[${col.colSize}px]`}
+						>
+							{col.header}
 						</th>
 					))}
 				</tr>
 			</thead>
 			<tbody>
-				{values.map((value, index) => (
+				{values?.map((value, index) => (
 					<tr key={index}>
-						{Object.entries(value).map(([k, v]) => (
-							<td key={k} className='px-4 py-2'>
-								{v as any}
-							</td>
+						{columnDef.map((col, index) => (
+							<td key={index}>{col.cell(value)}</td>
 						))}
 					</tr>
 				))}
