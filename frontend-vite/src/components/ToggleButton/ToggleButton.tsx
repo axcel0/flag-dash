@@ -11,12 +11,10 @@ const ToggleButton = ({
 	placeholder,
 }: any) => {
 	return (
-		<label
-			htmlFor='default-toggle'
-			className='inline-flex relative items-center cursor-pointer'
-		>
+		<label className='inline-flex relative items-center cursor-pointer group text-xl'>
 			<input
 				type='checkbox'
+				className='absolute left-1/2 -translate-x-1/2 peer appearance-none rounded-md'
 				name={name}
 				defaultChecked={defaultChecked}
 				checked={checked}
@@ -24,10 +22,8 @@ const ToggleButton = ({
 				onChange={onChange}
 				onBlur={onBlur}
 				onClick={onClick}
-				id='default-toggle'
-				className='sr-only peer'
 			/>
-			<div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+			<span className='w-16 h-10 flex items-center flex-shrink-0 p-1 bg-gray-300 rounded-full duration-300 ease-in-out peer-checked:bg-green-400 after:w-8 after:h-8 after:bg-white after:rounded-full after:shadow-md after:duration-300 peer-checked:after:translate-x-6 group-hover:after:translate-x-1'></span>
 		</label>
 	);
 };
