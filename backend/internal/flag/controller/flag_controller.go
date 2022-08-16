@@ -74,9 +74,11 @@ func (fc *flagController) DeleteFlag(c *fiber.Ctx) error {
 	userReq := &dto.DeleteFlagRequest{}
 	c.ParamsParser(userReq)
 
+	fmt.Print(userReq)
+
 	res, err := fc.fs.DeleteFlag(c.Context(), userReq)
 	if err != nil {
-		return err
+		return c.Status(fiber.ErrBadRequest.Code).JSON(err)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)

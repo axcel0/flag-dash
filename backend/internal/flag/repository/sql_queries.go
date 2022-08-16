@@ -8,7 +8,7 @@ const EditFlagQuery = `UPDATE flags
 						SET name = COALESCE(NULLIF($1,''), name),
 							active = COALESCE($2, active)
 						WHERE id = $3 RETURNING *;`
-const DeleteFlagQuery = `DELETE flags WHERE id = $1;`
+const DeleteFlagQuery = `DELETE FROM flags WHERE id = $1;`
 
 const GetFlagContextsCountQuery = `SELECT COUNT(*) FROM flag_contexts WHERE flag_id = $1;`
 const GetFlagContextsQuery = `SELECT * FROM flag_contexts WHERE flag_id = $1;`
