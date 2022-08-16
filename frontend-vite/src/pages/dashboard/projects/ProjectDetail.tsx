@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from "react";
+import { useState } from "react";
 
 import { useParams, useNavigate, Navigate } from "react-router-dom";
 
@@ -7,50 +7,24 @@ import { useFormik } from "formik";
 import {
 	Card,
 	ToggleButton,
-	NewTable,
+	Table,
 	Modal,
 	CircularLoading,
 } from "../../../components/index";
 
-import { createColumnHelper } from "@tanstack/react-table";
-
 import {
-	useGetPostByIdQuery,
-	useEditPostMutation,
-	useDeletePostMutation,
+	useGetProjectByIdQuery,
+	useEditProjectMutation,
+	useDeleteProjectMutation,
 } from "../../../redux/features/projects/projectsApiSlice";
 
-type Flag = {
-	id: number;
-	name: string;
-	status: boolean;
-	action: any;
-};
+import {
+	useGetFlagsQuery,
+	useEditFlagMutation,
+} from "../../../redux/features/flags/flagApiSlice";
 
-const columnHelper = createColumnHelper<Flag>();
-
-const columns = [
-	columnHelper.accessor("id", {
-		cell: (info) => info.getValue(),
-		header: () => <span>ID</span>,
-		size: 100,
-	}),
-	columnHelper.accessor("name", {
-		cell: (info) => info.getValue(),
-		header: () => <span>Name</span>,
-		size: 225,
-	}),
-	columnHelper.accessor("status", {
-		cell: (info) => info.getValue(),
-		header: () => <span>Status</span>,
-		size: 230,
-	}),
-	columnHelper.accessor("action", {
-		cell: (info) => info.getValue(),
-		header: () => <span>Action</span>,
-		size: 200,
-	}),
-];
+// Forms
+import { CreateFlagForm, EditProjectForm } from "../../../components/Forms";
 
 const ProjectDetail = () => {
 	const navigate = useNavigate();
@@ -60,18 +34,13 @@ const ProjectDetail = () => {
 	const [isOpenEditProject, setIsOpenEditProject] = useState(false);
 	const [isOpenDeleteProject, setIsOpenDeleteProject] = useState(false);
 
-	const { data, isLoading, isSuccess, isError } = useGetPostByIdQuery<any>(
-		params.id,
-	);
+	const { data, isLoading, isSuccess, isError } =
+		useGetProjectByIdQuery<any>(params.id);
 
-	const [
-		editProject,
-		{ isLoading: isLoadingEdit, isSuccess: isSuccessEdit },
-	] = useEditPostMutation();
 	const [
 		deleteProject,
 		{ isLoading: isLoadingDelete, isSuccess: isDeleteSuccess },
-	] = useDeletePostMutation();
+	] = useDeleteProjectMutation();
 
 	const handleDeleteProject = async () => {
 		try {
@@ -82,26 +51,56 @@ const ProjectDetail = () => {
 		}
 	};
 
-	const editForm = useFormik({
-		enableReinitialize: true,
-		initialValues: {
-			name: data?.project?.name,
+	const {
+		data: dataFlags,
+		isLoadingFlags,
+		isSuccess: isSuccessFlags,
+	} = useGetFlagsQuery<any>({ projectId: params.id });
+
+	const [editFlag, { isLoading: isLoadingEditFlag }] = useEditFlagMutation();
+
+	const flagColsDef = [
+		{
+			key: "id",
+			header: <span>ID</span>,
+			cell: (value: any) => <h1>{value.id}</h1>,
+			colSize: "200",
 		},
-		onSubmit: async (values) => {
-			try {
-				await editProject({ ...values, id: params.id }).unwrap();
-			} catch (err) {
-				console.log(err);
-			}
+		{
+			key: "name",
+			header: <span>Name</span>,
+			cell: (value: any) => <h1>{value.name}</h1>,
+			colSize: "270",
 		},
-	});
+		{
+			key: "active",
+			header: <span>Status</span>,
+			cell: (value: any) => (
+				<ToggleButton
+					defaultChecked={value.active}
+					onChange={(e: any) =>
+						editFlag({
+							id: value.id,
+							active: e.target.checked,
+						})
+					}
+				/>
+			),
+			colSize: "200",
+		},
+		{
+			key: "id",
+			header: <span>Action</span>,
+			cell: (value: any) => <ToggleButton />,
+			colSize: "200",
+		},
+	];
 
 	const [maxPage, setMaxPage] = useState(20);
 	const [currPage, setCurrPage] = useState(1);
 	const [maxItem, setMaxItem] = useState(12);
 
-	if (isLoading || isLoadingEdit || isLoadingDelete)
-		return <CircularLoading />;
+	if (isLoading || isLoadingDelete) return <CircularLoading />;
 
 	if (isError) return <Navigate to='/projects/' />;
 	return (
@@ -210,9 +209,14 @@ const ProjectDetail = () => {
 					</button>
 				</div>
 				<div className='bg-white shadow rounded-md my-3 mx-2 p-5 h-[540px]'>
-					<NewTable tableData={[]} columns={columns} />
+					{isSuccessFlags ? (
+						<Table
+							columnDef={flagColsDef}
+							values={dataFlags.flags}
+						/>
+					) : null}
 				</div>
-				{/* Edir Project Modal */}
+				{/* Edit Project Modal */}
 				<div>
 					<Modal
 						visible={isOpenEditProject}
@@ -221,51 +225,18 @@ const ProjectDetail = () => {
 						}
 						childStyle='bg-white rounded-md w-[700px] h-100 p-10'
 					>
-						<form onSubmit={editForm.handleSubmit}>
-							<h3 className='text-3xl my-2'>
-								Edit Project
-							</h3>
-							<h3 className='text-lg'>Name </h3>
-							<input
-								type='text'
-								name='name'
-								placeholder='Name'
-								value={editForm.values.name as any}
-								onChange={editForm.handleChange}
-								className='rounded border-2 p-2 my-2 w-full'
-							/>
-							<h3 className='text-lg'>
-								Authorization Key
-							</h3>
-							<div className='flex flex-row'>
-								<input
-									type='text'
-									placeholder='Generate key'
-									className='rounded border-2 p-2 my-2 w-full'
-								/>
-								<button className='rounded-md px-2 border-2 hover:bg-gray-200 ml-2'>
-									Generate
-								</button>
-							</div>
-							<div>
-								<button
-									className='rounded-md bg-yellow-300 hover:bg-yellow-200 p-3 m-1'
-									type='submit'
-								>
-									<p className='text-lg'>Edit</p>
-								</button>
-								<button
-									onClick={() =>
-										setIsOpenEditProject(
-											!isOpenEditProject,
-										)
-									}
-									className='rounded-md bg-red-300 hover:bg-red-200 p-3 m-1'
-								>
-									<p className='text-lg'>Cancel</p>
-								</button>
-							</div>
-						</form>
+						<EditProjectForm
+							handleSuccess={() =>
+								setIsOpenEditProject(!isOpenEditProject)
+							}
+							handleFailed={() =>
+								setIsOpenEditProject(!isOpenEditProject)
+							}
+							handleCancel={() =>
+								setIsOpenEditProject(!isOpenEditProject)
+							}
+							data={data}
+						/>
 					</Modal>
 				</div>
 				{/* Create Flag Modal */}
@@ -277,52 +248,16 @@ const ProjectDetail = () => {
 						}
 						childStyle='bg-white rounded-md w-[700px] h-100 p-10'
 					>
-						<h3 className='text-4xl my-2'>Create Flag</h3>
-						<input
-							type='text'
-							placeholder='Flag name'
-							className='my-2 p-2 border-4 rounded-md w-full'
+						<CreateFlagForm
+							handleSuccess={() =>
+								setIsOpenCreateFlag(!isOpenCreateFlag)
+							}
+							handleFailed={() => {}}
+							handleCancel={setIsOpenCreateFlag(
+								!isOpenCreateFlag,
+							)}
+							data={data?.project.id}
 						/>
-						<div className='flex flex-row items-center'>
-							<p className='text-2xl'>Contexts</p>
-							<button className='shadow-xl rounded p-2 mx-2 bg-orange-300 hover:bg-orange-200'>
-								<p className='text-2xl'>+</p>
-							</button>
-						</div>
-						<div className='max-h-[300px] overflow-y-auto'>
-							<div className='rounded shadow border my-2'>
-								<input
-									type='text'
-									placeholder='Name'
-									className='p-2 rounded-md border mx-2'
-								/>
-								<input
-									type='text'
-									placeholder='Condition'
-									className='p-2 rounded-md border mx-2'
-								/>
-								<input
-									type='text'
-									placeholder='Value'
-									className='p-2 rounded-md border mx-2'
-								/>
-							</div>
-						</div>
-						<div className='flex flex-col'>
-							<button className='shadow rounded-md p-2 bg-green-300 hover:bg-green-200 my-2'>
-								<p className='text-xl'>Create</p>
-							</button>
-							<button
-								onClick={() =>
-									setIsOpenCreateFlag(
-										!isOpenCreateFlag,
-									)
-								}
-								className='shadow rounded-md p-2 bg-red-300 hover:bg-red-200 my-2'
-							>
-								<p className='text-xl'>Cancel</p>
-							</button>
-						</div>
 					</Modal>
 					{/* Delete Project Modal */}
 					<Modal

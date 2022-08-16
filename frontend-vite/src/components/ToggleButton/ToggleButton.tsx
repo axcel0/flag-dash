@@ -1,6 +1,15 @@
 import React, { PropsWithChildren } from "react";
 
-const ToggleButton = ({ children }: PropsWithChildren) => {
+const ToggleButton = ({
+	children,
+	name,
+	defaultChecked,
+	checked,
+	onClick,
+	onChange,
+	onBlur,
+	placeholder,
+}: any) => {
 	return (
 		<label
 			htmlFor='default-toggle'
@@ -8,7 +17,13 @@ const ToggleButton = ({ children }: PropsWithChildren) => {
 		>
 			<input
 				type='checkbox'
-				value=''
+				name={name}
+				defaultChecked={defaultChecked}
+				checked={checked}
+				placeholder={placeholder}
+				onChange={onChange}
+				onBlur={onBlur}
+				onClick={onClick}
 				id='default-toggle'
 				className='sr-only peer'
 			/>

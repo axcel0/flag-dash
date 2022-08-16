@@ -1,6 +1,6 @@
 import { apiSlice } from "../../api/apiSlice";
 
-interface Post {
+interface Project {
 	id: number;
 	name: string;
 }
@@ -14,7 +14,7 @@ interface ListResponse<T> {
 
 const projectApiSlice = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
-		getPosts: builder.query<ListResponse<Post>, any>({
+		getProjects: builder.query<ListResponse<Project>, any>({
 			query: ({ currPage = 1, limit = 5 }) =>
 				`/project/?limit=${limit}&page_num=${currPage}`,
 			providesTags: (result, error, currPage) => {
@@ -29,7 +29,7 @@ const projectApiSlice = apiSlice.injectEndpoints({
 					: [{ type: "Projects", id: "PARTIAL-LIST" }];
 			},
 		}),
-		getPostById: builder.query({
+		getProjectById: builder.query({
 			query: (id) => `/project/${id}`,
 			providesTags: (result, error, id) => {
 				return [
@@ -38,7 +38,7 @@ const projectApiSlice = apiSlice.injectEndpoints({
 				];
 			},
 		}),
-		newPost: builder.mutation({
+		newProject: builder.mutation({
 			query: (values) => ({
 				url: "/project/new-project",
 				method: "POST",
@@ -48,7 +48,7 @@ const projectApiSlice = apiSlice.injectEndpoints({
 				{ type: "Projects", id: "PARTIAL-LIST" },
 			],
 		}),
-		editPost: builder.mutation({
+		editProject: builder.mutation({
 			query: (values) => ({
 				url: `/project/${values.id}`,
 				method: "PATCH",
@@ -61,7 +61,7 @@ const projectApiSlice = apiSlice.injectEndpoints({
 				];
 			},
 		}),
-		deletePost: builder.mutation({
+		deleteProject: builder.mutation({
 			query: ({ id }) => ({
 				url: `/project/${id}`,
 				method: "DELETE",
@@ -78,9 +78,9 @@ const projectApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-	useGetPostsQuery,
-	useGetPostByIdQuery,
-	useNewPostMutation,
-	useEditPostMutation,
-	useDeletePostMutation,
+	useGetProjectsQuery,
+	useGetProjectByIdQuery,
+	useNewProjectMutation,
+	useEditProjectMutation,
+	useDeleteProjectMutation,
 } = projectApiSlice;
