@@ -7,21 +7,17 @@ import { useFetchProfileQuery } from "../redux/features/auth/authApiSlice";
 
 const RequireAuth = () => {
 	const location = useLocation();
-	const navigate = useNavigate();
-	const dispatch = useDispatch();
 
 	const { data, error, isLoading, isError, isSuccess } =
 		useFetchProfileQuery();
 
 	if (isLoading) return <CircularLoading />;
 
-	if (isError) {
+	if (isError || !data) {
 		return <Navigate to='/login' state={{ from: location }} />;
 	}
 
-	if (isSuccess) {
-		return <Outlet />;
-	}
+	return <Outlet />;
 };
 
 export default RequireAuth;

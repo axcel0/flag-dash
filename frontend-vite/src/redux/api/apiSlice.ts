@@ -36,6 +36,7 @@ const baseQueryWithReauth = async (
 			console.log("result:", result);
 		} else {
 			api.dispatch(userLogout());
+			window.location.href = "/login";
 		}
 	}
 	return result;

@@ -45,7 +45,7 @@ func (s *authService) UserLogin(ctx context.Context, cu *dto.UserLoginRequest) (
 		return nil, errNormal
 	}
 
-	tokenRefresh, errRefresh := utils.GenerateJWT(user, s.cfg.JWT.RefreshSecretKey, 2)
+	tokenRefresh, errRefresh := utils.GenerateJWT(user, s.cfg.JWT.RefreshSecretKey, 60)
 
 	if errRefresh != nil {
 		return nil, errRefresh

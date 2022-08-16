@@ -40,7 +40,7 @@ func (ac *authController) UserLogin(c *fiber.Ctx) error {
 		return c.Status(fiber.ErrUnauthorized.Code).JSON(err)
 	}
 
-	expirationTime := time.Now().Add(time.Duration(2) * time.Minute)
+	expirationTime := time.Now().Add(time.Duration(30) * time.Minute)
 
 	jwtCookie := &fiber.Cookie{
 		Name: "refreshToken_cookie",
