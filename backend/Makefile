@@ -1,2 +1,2 @@
 migrate-up:
-	migrate -database "postgres://postgres:postgrespw@localhost:49153/flag-dash?sslmode=disable" -path "./cmd/migrations" -verbose up
+	migrate -database "postgres://postgres:postgrespw@localhost:55000/flag_dash?sslmode=disable" -path "./cmd/migrations" -verbose up
