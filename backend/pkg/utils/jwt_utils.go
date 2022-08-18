@@ -15,6 +15,11 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
+type ProjectClaims struct {
+	ID	string
+	jwt.StandardClaims
+}
+
 
 func GenerateJWT(user *dao.User, secretKey string, expiredTime uint8) (string, error){
 	
@@ -37,6 +42,23 @@ func GenerateJWT(user *dao.User, secretKey string, expiredTime uint8) (string, e
 	return tokenString, nil
 }
 
+func GenerateJWTProject(project *dao.Project, secretKey string) (string, error) {
+	claims := &ProjectClaims{
+		ID: fmt.Sprint(project.ID),
+		StandardClaims: jwt.StandardClaims{},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	
+	tokenString, err := token.SignedString([]byte(secretKey))
+
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
+}
+
 func VerifyJWT(tokenString string, tokenSecret string) (bool, *Claims, error){
 	
 	claims := &Claims{}
@@ -45,6 +67,24 @@ func VerifyJWT(tokenString string, tokenSecret string) (bool, *Claims, error){
 
         return []byte(tokenSecret), nil
     })
+
+	if err != nil {
+		return false, nil, err
+	}
+
+	if !token.Valid {
+		return false, nil, nil
+	}
+
+	return true, claims, nil
+}
+
+func VerifyJWTProject(tokenString string, tokenSecret string) (bool, *ProjectClaims, error) {
+	claims := &ProjectClaims{}
+
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error){
+		return []byte(tokenSecret), nil
+	})
 
 	if err != nil {
 		return false, nil, err

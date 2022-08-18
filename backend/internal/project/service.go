@@ -12,4 +12,5 @@ type Service interface {
 	EditProject(ctx context.Context, editProjectReq *dto.EditProjectRequest) (*dto.EditProjectResponse, error)
 	DeleteProject(ctx context.Context, deleteProjectReq *dto.DeleteProjectRequest) error
 	GetProjects(ctx context.Context, getProjectsReq *dto.GetProjectsRequest) (*dto.GetProjectsResponse, error)
+	GenerateProjectAccessKey(ctx context.Context, genProjectAccessKey *dto.GenerateProjectAccessKeyRequest) (*dto.GenerateProjectAccessKeyResponse, error)
 }

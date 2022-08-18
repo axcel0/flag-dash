@@ -111,3 +111,24 @@ func (pr *projectRepository) DeleteProject(ctx context.Context, project *dao.Pro
 	
 	return nil
 }
+
+func (pr *projectRepository) AddProjectAccessKey(ctx context.Context, project *dao.Project) (*dao.Project, error) {
+
+	p := &dao.Project{}
+
+	if err := pr.db.QueryRowxContext(ctx, AddProjectAccessKeyQuery, project.AccessKey).StructScan(p); err != nil {
+		return nil, err
+	}
+
+	return p, nil
+	
+}
+
+func (pr *projectRepository) GetProjectAccessKey(ctx context.Context, project *dao.Project) (*dao.Project, error) {
+	p := &dao.Project{}
+
+	if err := pr.db.QueryRowxContext(ctx, GetProjectAccessKeyQuery, project.ID).StructScan(p); err != nil {
+		return nil, err
+	}
+	return p, nil
+}

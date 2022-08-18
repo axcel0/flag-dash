@@ -6,3 +6,5 @@ const GetProjectQuery = `SELECT * FROM projects WHERE id = $1;`
 const NewProjectQuery = `INSERT INTO projects (name) VALUES ($1) RETURNING *;`
 const EditProjectQuery = `UPDATE projects SET name = COALESCE(NULLIF($1, ''), name), update_time = now() WHERE id = $2 RETURNING *;`
 const DeleteProjectQuery = `DELETE FROM projects WHERE id = $1;`
+const GetProjectAccessKeyQuery = `SELECT access_key FROM projects WHERE id = $1;`
+const AddProjectAccessKeyQuery = `UPDATE projects SET access_key = COALESCE(NULLIF($1,''),access_key), update_time = now() WHERE id = $2 RETURNING *;`

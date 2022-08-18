@@ -100,3 +100,16 @@ func (pc *projectController) DeleteProject (c *fiber.Ctx) error {
 		Msg: "Delete Project Success",
 	})
 }
+
+func (pc *projectController) GenerateProjectAccessKey(c *fiber.Ctx) error {
+	genProjectAccessKeyReq := &dto.GenerateProjectAccessKeyRequest{}
+	c.ParamsParser(genProjectAccessKeyReq)
+
+	res, err := pc.ps.GenerateProjectAccessKey(c.Context(), genProjectAccessKeyReq)
+
+	if err != nil {
+		return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+	}
+
+	return c.Status(fiber.StatusOK).JSON(res)
+}

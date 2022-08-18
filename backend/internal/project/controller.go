@@ -8,4 +8,5 @@ type Controller interface {
 	EditProject(c *fiber.Ctx) error
 	DeleteProject(c *fiber.Ctx) error
 	GetProjects(c *fiber.Ctx) error
+	GenerateProjectAccessKey(c *fiber.Ctx) error
 }

@@ -36,7 +36,7 @@ func (s *Server) InitializeServer () {
 
 
 	//Initialize Middlewares
-	mw := middlewares.NewMiddlewareManager(s.cfg, s.logger)
+	mw := middlewares.NewMiddlewareManager(projectRepository, s.cfg, s.logger)
 
 	s.fiber.Use(compress.New(compress.Config{
     	Level: compress.LevelBestSpeed, // 1

@@ -25,6 +25,16 @@ type DeleteProjectRequest struct {
 	ID	uint32	`json:"id" params:"id"`
 }
 
+type GenerateProjectAccessKeyRequest struct {
+	ID uint32 `json:"id" params:"id"`
+	AccessKey string `json:"access_key"`
+}
+
+type ProjectAuthorizationResponse struct {
+	Status	string	`json:"status"`
+	Msg		string	`json:"msg"`
+}
+
 type GetProjectsResponse struct {
 	Projects	[]*dao.Project	`json:"projects"`
 	Limit		float32			`json:"limit"`
@@ -50,4 +60,9 @@ type EditProjectResponse struct {
 type DeleteProjectResponse struct {
 	Status		string		`json:"status"`
 	Msg			string		`json:"msg"`
+}
+
+type GenerateProjectAccessKeyResponse struct {
+	Status		string			`json:"status"`
+	Project 	*dao.Project	`json:"project"`
 }

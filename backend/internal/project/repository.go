@@ -14,4 +14,6 @@ type Repository interface {
 	GetProject(ctx context.Context, project *dao.Project) (*dao.Project, error)
 	GetProjects(ctx context.Context, pq *utils.PaginationQuery) ([]*dao.Project, error)
 	GetProjectCount(ctx context.Context)(uint8, error)
+	GetProjectAccessKey(ctx context.Context, project *dao.Project) (*dao.Project, error)
+	AddProjectAccessKey(ctx context.Context, project *dao.Project) (*dao.Project, error)
 }

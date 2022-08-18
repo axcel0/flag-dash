@@ -97,3 +97,22 @@ func (ps *projectService) DeleteProject(ctx context.Context, deleteProjectReq *d
 	
 	return nil
 }
+
+func (ps *projectService) GenerateProjectAccessKey(ctx context.Context, genProjectAccessKey *dto.GenerateProjectAccessKeyRequest) (*dto.GenerateProjectAccessKeyResponse, error) {
+	token, err := utils.GenerateJWTProject(&dao.Project{ID: genProjectAccessKey.ID}, ps.cfg.JWT.SecretKey)
+	
+	if err != nil {
+		return nil, err
+	}
+
+	project, err := ps.pr.AddProjectAccessKey(ctx, &dao.Project{ID: genProjectAccessKey.ID, AccessKey: token})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.GenerateProjectAccessKeyResponse{
+		Status: "200",
+		Project: project,
+	}, nil
+}
