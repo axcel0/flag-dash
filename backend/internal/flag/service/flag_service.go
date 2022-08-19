@@ -20,6 +20,19 @@ func NewFlagService(cfg *config.Config, fr flag.Repository) flag.Service{
 }
 
 // Flag
+func (fs *flagService) GetAllFlags(ctx context.Context, getAllFlagsReq *dto.GetAllFlagsRequest) (*dto.GetAllFlagsResponse, error){
+	res, err := fs.fr.GetAllFlags(ctx, getAllFlagsReq.ProjectID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.GetAllFlagsResponse{
+		Status: "200",
+		Flags: res,
+	}, nil
+}
+
 func (fs *flagService) GetFlags(ctx context.Context, getFlagsReq *dto.GetFlagsRequest) (*dto.GetFlagsResponse, error) {
 	itemCount, err := fs.fr.GetFlagsCount(ctx, getFlagsReq.ProjectID)
 	if err != nil {

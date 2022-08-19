@@ -1,5 +1,6 @@
 package repository
 
+const GetAllFlagsQuery = `SELECT * FROM flags WHERE project_id = $1;`
 const CountFlagItemQuery = `SELECT COUNT(*) FROM flags;`
 const GetFlagsQuery = `SELECT * FROM flags WHERE project_id = $1 AND name ILIKE '%' || $2 || '%' OFFSET $3 LIMIT $4;`
 const GetFlagQuery = `SELECT * FROM flags WHERE id = $1;`

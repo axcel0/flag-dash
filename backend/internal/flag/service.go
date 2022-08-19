@@ -7,6 +7,7 @@ import (
 )
 
 type Service interface {
+	GetAllFlags(ctx context.Context, getAllFlagsReq *dto.GetAllFlagsRequest) (*dto.GetAllFlagsResponse, error)
 	GetFlags(ctx context.Context, getFlagsReq *dto.GetFlagsRequest) (*dto.GetFlagsResponse, error)
 	GetFlag(ctx context.Context, getFlagReq *dto.GetFlagRequest) (*dto.GetFlagResponse, error)
 	NewFlag(ctx context.Context, newFlagReq *dto.NewFlagRequest) (*dto.NewFlagResponse, error)

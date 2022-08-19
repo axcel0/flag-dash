@@ -18,6 +18,19 @@ func NewFlagController(cfg *config.Config, fs flag.Service) flag.Controller{
 	return &flagController{cfg:cfg, fs:fs}
 }
 
+func (fc *flagController) GetAllFlags(c *fiber.Ctx) error {
+	userReq := &dto.GetAllFlagsRequest{}
+	c.QueryParser(userReq)
+
+	res, err := fc.fs.GetAllFlags(c.Context(), userReq)
+
+	if err != nil {
+		return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+	}
+	
+	return c.Status(fiber.StatusOK).JSON(res)
+}
+
 func (fc *flagController) GetFlags(c *fiber.Ctx) error {
 	userReq := &dto.GetFlagsRequest{}
 	c.QueryParser(userReq)

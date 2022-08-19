@@ -20,6 +20,31 @@ func NewFlagRepo(cfg *config.Config, db *sqlx.DB) flag.Repository {
 	return &flagRepo{cfg:cfg, db:db}
 }
 
+func (fr *flagRepo) GetAllFlags(ctx context.Context, projectID uint32) ([]*dao.Flag, error) {
+	var flags []*dao.Flag
+
+	rows, err := fr.db.QueryxContext(ctx, GetAllFlagsQuery, projectID)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next(){
+		f := &dao.Flag{}
+		if err = rows.StructScan(f); err != nil {
+			return nil, err
+		}
+		flags = append(flags, f)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return flags, nil
+}
+
 func (fr *flagRepo) GetFlagsCount(ctx context.Context, projectID uint32) (uint32, error) {
 	var itemCount uint32
 	if err := fr.db.QueryRowxContext(ctx, CountFlagItemQuery).Scan(&itemCount); err != nil {

@@ -8,6 +8,8 @@ import (
 )
 
 type Repository interface{
+	GetAllFlags(ctx context.Context, projectID uint32) ([]*dao.Flag, error)
+
 	GetFlagsCount(ctx context.Context, projectID uint32) (uint32, error)
 	GetFlags(ctx context.Context, pq *utils.PaginationQuery, projectID uint32) ([]*dao.Flag, error)
 	GetFlag(ctx context.Context, flag *dao.Flag) (*dao.Flag, error)

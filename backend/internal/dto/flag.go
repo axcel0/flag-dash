@@ -10,6 +10,10 @@ type GetFlagsRequest struct {
 	PageNum		float32	`json:"page_num" query:"page_num"`
 }
 
+type GetAllFlagsRequest struct {
+	ProjectID uint32	`json:"project_id" query:"project_id"`
+}
+
 type GetFlagRequest struct {
 	ID	uint32	`json:"id" params:"id"`
 }
@@ -61,6 +65,11 @@ type DeleteFlagContextRequest struct {
 }
 
 // Flag Response Structs
+type GetAllFlagsResponse struct {
+	Status	string			`json:"status"`
+	Flags	[]*dao.Flag		`json:"flags"`
+}
+
 type GetFlagsResponse struct {
 	Flags    []*dao.Flag		`json:"flags"`
 	Limit		float32			`json:"limit"`

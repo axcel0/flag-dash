@@ -9,6 +9,7 @@ import (
 func InitializeFlagRouter(r fiber.Router, mw *middlewares.MiddlewareManager, fc flag.Controller){
 	flagGroup := r.Group("/flag")
 
+	flagGroup.Get("/all-flags", mw.ProjectAuthorized, fc.GetAllFlags)
 	flagGroup.Get("/", mw.UserAuthorized, fc.GetFlags)
 	flagGroup.Get("/:id", mw.UserAuthorized, fc.GetFlag)
 	flagGroup.Post("/new-flag", mw.UserAuthorized, fc.NewFlag)
