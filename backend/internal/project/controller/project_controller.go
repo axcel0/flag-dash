@@ -2,6 +2,7 @@ package controller
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/blastertwist/flag-dash/config"
 	"github.com/blastertwist/flag-dash/internal/dto"
@@ -26,6 +27,7 @@ func (pc *projectController) GetProjects (c *fiber.Ctx) error {
 	res, err := pc.ps.GetProjects(c.Context(), getProjectsReq)
 	
 	if err != nil {
+		fmt.Print(err)
 		return err
 	}
 
@@ -108,7 +110,7 @@ func (pc *projectController) GenerateProjectAccessKey(c *fiber.Ctx) error {
 	res, err := pc.ps.GenerateProjectAccessKey(c.Context(), genProjectAccessKeyReq)
 
 	if err != nil {
-		return c.Status(fiber.ErrBadRequest.Code).JSON(err)
+		return c.Status(fiber.ErrBadRequest.Code).JSON(err.Error())
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)

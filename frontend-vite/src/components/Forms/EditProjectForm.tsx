@@ -2,7 +2,10 @@ import { useFormik } from "formik";
 
 import { FormProps } from ".";
 
-import { useEditProjectMutation } from "../../redux/features/projects/projectsApiSlice";
+import {
+	useEditProjectMutation,
+	useGenProjAccessKeyMutation,
+} from "../../redux/features/projects/projectsApiSlice";
 
 const EditProjectForm: React.FC<FormProps> = ({
 	handleSuccess,
@@ -11,6 +14,19 @@ const EditProjectForm: React.FC<FormProps> = ({
 	data,
 }) => {
 	const [editProject, { isLoading: isLoading }] = useEditProjectMutation();
+	const [generateAccessKey, { isLoading: isLoadingGen }] =
+		useGenProjAccessKeyMutation();
+
+	const handleGenAccessKey = async (e: Event) => {
+		e.preventDefault();
+		try {
+			const res = await generateAccessKey({
+				id: data?.project?.id,
+			}).unwrap();
+		} catch (err) {
+			console.log(err);
+		}
+	};
 
 	const editForm = useFormik({
 		enableReinitialize: true,
@@ -49,8 +65,12 @@ const EditProjectForm: React.FC<FormProps> = ({
 					type='text'
 					placeholder='Generate key'
 					className='rounded border-2 p-2 my-2 w-full'
+					defaultValue={data?.project?.access_key}
 				/>
-				<button className='rounded-md px-2 border-2 hover:bg-gray-200 ml-2'>
+				<button
+					className='rounded-md px-2 border-2 hover:bg-gray-200 ml-2'
+					onClick={(e: any) => handleGenAccessKey(e)}
+				>
 					Generate
 				</button>
 			</div>

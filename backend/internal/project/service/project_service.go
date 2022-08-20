@@ -105,7 +105,7 @@ func (ps *projectService) GenerateProjectAccessKey(ctx context.Context, genProje
 		return nil, err
 	}
 
-	project, err := ps.pr.AddProjectAccessKey(ctx, &dao.Project{ID: genProjectAccessKey.ID, AccessKey: token})
+	project, err := ps.pr.AddProjectAccessKey(ctx, &dao.Project{ID: genProjectAccessKey.ID, AccessKey: &token})
 
 	if err != nil {
 		return nil, err

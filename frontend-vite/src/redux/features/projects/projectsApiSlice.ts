@@ -74,6 +74,20 @@ const projectApiSlice = apiSlice.injectEndpoints({
 				];
 			},
 		}),
+		genProjAccessKey: builder.mutation({
+			query: ({ id }) => ({
+				url: `/project/access-key/${id}`,
+				method: "POST",
+			}),
+			invalidatesTags: (result, error, args) => {
+				return result
+					? [
+							{ type: "Projects", id: args.id },
+							{ type: "Projects", id: "PARTIAL-LIST" },
+					  ]
+					: [{ type: "Projects", id: "PARTIAL-LIST" }];
+			},
+		}),
 	}),
 });
 
@@ -83,4 +97,5 @@ export const {
 	useNewProjectMutation,
 	useEditProjectMutation,
 	useDeleteProjectMutation,
+	useGenProjAccessKeyMutation,
 } = projectApiSlice;

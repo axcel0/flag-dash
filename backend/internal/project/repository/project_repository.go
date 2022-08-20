@@ -116,7 +116,7 @@ func (pr *projectRepository) AddProjectAccessKey(ctx context.Context, project *d
 
 	p := &dao.Project{}
 
-	if err := pr.db.QueryRowxContext(ctx, AddProjectAccessKeyQuery, project.AccessKey).StructScan(p); err != nil {
+	if err := pr.db.QueryRowxContext(ctx, AddProjectAccessKeyQuery, project.AccessKey, project.ID).StructScan(p); err != nil {
 		return nil, err
 	}
 

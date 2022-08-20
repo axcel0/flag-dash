@@ -44,7 +44,7 @@ func (mw *MiddlewareManager) ProjectAuthorized(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(err)
 	}
 
-	if p.AccessKey != token {
+	if *p.AccessKey != token {
 		return c.Status(fiber.ErrUnauthorized.Code).JSON(&dto.ProjectAuthorizationResponse{
 			Status: "401",
 			Msg: "Unauthorized Project, token provided not same as in the database.",
