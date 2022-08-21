@@ -58,11 +58,9 @@ func (fc *flagController) GetFlag(c *fiber.Ctx) error {
 func (fc *flagController) NewFlag(c *fiber.Ctx) error {
 	userReq := &dto.NewFlagRequest{}
 	c.BodyParser(&userReq)
-	fmt.Print(userReq)
 
 	res, err := fc.fs.NewFlag(c.Context(), userReq)
 	if err != nil {
-		fmt.Print(err)
 		return c.Status(fiber.ErrBadRequest.Code).JSON(err);
 	}
 	return c.Status(fiber.StatusCreated).JSON(res)

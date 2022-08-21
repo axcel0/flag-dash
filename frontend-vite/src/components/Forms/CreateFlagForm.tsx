@@ -15,18 +15,22 @@ const CreateFlagForm: React.FC<FormProps> = ({
 	data,
 }) => {
 	const [newFlag, { isLoading: loadingNewFlag }] = useNewFlagMutation();
-
 	const addCtxForm = useFormik({
 		enableReinitialize: true,
 		initialValues: {
-			projectId: data?.project?.id,
+			projectId: data,
 			name: "",
 			active: false,
 			value: "",
 		},
 		onSubmit: async (values) => {
 			try {
-				const res = await newFlag(values).unwrap();
+				console.log("Submission:", values);
+				const res = await newFlag({
+					projectId: values.projectId,
+					name: values.name,
+					active: values.active,
+				}).unwrap();
 				if (res.flag) {
 					handleSuccess();
 				}
@@ -49,11 +53,6 @@ const CreateFlagForm: React.FC<FormProps> = ({
 				className='my-2 p-2 border-4 rounded-md w-full'
 			/>
 			<h3 className='text-2xl'>Active: </h3>
-			<ToggleButton
-				name='active'
-				onChange={addCtxForm.handleChange}
-				value={addCtxForm.values.active}
-			/>
 			<div className='flex flex-row items-center'>
 				<p className='text-2xl'>Contexts</p>
 				<button className='shadow-xl rounded p-2 mx-2 bg-orange-300 hover:bg-orange-200'>
