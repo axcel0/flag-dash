@@ -66,9 +66,10 @@ func (pc *projectController) EditProject (c *fiber.Ctx) error {
 	c.ParamsParser(editProjectReq);
 	c.BodyParser(editProjectReq)
 
+
 	projectID, err := c.ParamsInt("id")
 	if err != nil {
-		return err
+		return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 	}
 
 	editProjectReq.ID = uint32(projectID)
@@ -76,11 +77,10 @@ func (pc *projectController) EditProject (c *fiber.Ctx) error {
 	res, err := pc.ps.EditProject(c.Context(), editProjectReq)
 	
 	if err != nil {
-		return err
+		return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 	}
 
-	c.JSON(res)
-	return nil
+	return c.Status(fiber.StatusAccepted).JSON(res)
 }
 
 func (pc *projectController) DeleteProject (c *fiber.Ctx) error {
