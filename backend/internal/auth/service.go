@@ -7,6 +7,7 @@ import (
 )
 
 type Service interface {
+	GetUsers(ctx context.Context, getUsersReq *dto.GetUsersRequest) (*dto.GetUsersResponse, error)
 	UserLogin(ctx context.Context, cu *dto.UserLoginRequest) (*dto.UserLoginResponse, error)
 	CreateUser(ctx context.Context, cu *dto.CreateUserRequest) (*dto.CreateUserResponse, error)
 	GetUserByEmail(ctx context.Context, gu *dto.GetUserRequest) (*dto.GetUserResponse, error)

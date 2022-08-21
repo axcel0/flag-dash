@@ -9,6 +9,7 @@ import (
 	"github.com/blastertwist/flag-dash/internal/auth"
 	"github.com/blastertwist/flag-dash/internal/dao"
 	"github.com/blastertwist/flag-dash/pkg/logger"
+	"github.com/blastertwist/flag-dash/pkg/utils"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )
@@ -21,6 +22,41 @@ type authRepo struct {
 
 func NewAuthRepository(cfg *config.Config, db *sqlx.DB, logger logger.Logger) auth.Repository {
 	return &authRepo{cfg: cfg, db: db, logger: logger}
+}
+
+func (r *authRepo) GetUsersCount(ctx context.Context) (uint8, error) {
+	var n int
+
+	if err := r.db.QueryRowxContext(ctx, getUsersCountQuery).Scan(&n); err != nil {
+		return 0, err
+	}
+	return uint8(n), nil
+}
+
+func (r *authRepo) GetUsers(ctx context.Context, pq *utils.PaginationQuery) ([]*dao.User, error) {
+	var users []*dao.User
+
+	rows, err := r.db.QueryxContext(ctx, getUsersQuery, pq.Filter, pq.Offset, pq.Limit)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		u := &dao.User{}
+		if err := rows.StructScan(u); err != nil {
+			return nil, err
+		}
+		users = append(users, u)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return users, nil
 }
 
 func (r *authRepo) CreateUser(ctx context.Context, user *dao.User, userProfile *dao.UserProfile) (*dao.User, *dao.UserProfile, error) {

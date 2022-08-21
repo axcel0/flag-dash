@@ -20,6 +20,19 @@ func NewAuthController(cfg *config.Config, as auth.Service) auth.Controller {
 	return &authController{cfg: cfg, as: as}
 }
 
+func (ac *authController) GetUsers(c *fiber.Ctx) error {
+	userReq := &dto.GetUsersRequest{}
+	c.QueryParser(userReq)
+
+	res, err := ac.as.GetUsers(c.Context(), userReq)
+	
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
+	}
+
+	return c.Status(fiber.StatusOK).JSON(res);
+}
+
 
 // UserLogin Function to handler UserLogin request.
 // @Description Handle User Login.
@@ -101,19 +114,31 @@ func (ac *authController) CreateUser(c *fiber.Ctx) error {
 	return nil
 }
 
-func (ac *authController) GetUser(c *fiber.Ctx) error {
+func (ac *authController) GetUserByID(c *fiber.Ctx) error {
+	getUserReq := &dto.GetUserRequest{}
+	c.ParamsParser(getUserReq)
+
+	getUserRes, err := ac.as.GetUserByID(c.Context(), getUserReq.ID)
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
+	}
+
+	return c.Status(fiber.StatusOK).JSON(getUserRes)
+}
+
+func (ac *authController) GetUserByEmail(c *fiber.Ctx) error {
 	getUserReq := &dto.GetUserRequest{}
 	c.BodyParser(getUserReq)
 
-	getUserRes, err := ac.as.GetUserByEmail(c.Context(), getUserReq)
+
+	res, err := ac.as.GetUserByEmail(c.Context(), getUserReq)
 
 	if err != nil {
-		c.JSON(getUserRes)
-		return err
+		return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 	}
-	c.JSON(getUserRes)
 
-	return nil
+	return c.Status(fiber.StatusOK).JSON(res)
 }
 
 func (ac *authController) EditUser(c *fiber.Ctx) error {

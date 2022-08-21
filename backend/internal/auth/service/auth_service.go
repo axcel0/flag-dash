@@ -21,6 +21,45 @@ func NewAuthService(cfg *config.Config, r auth.Repository) auth.Service {
 	return &authService{cfg: cfg, r: r}
 }
 
+func (s *authService) GetUsers(ctx context.Context, getUsersReq *dto.GetUsersRequest) (*dto.GetUsersResponse, error) {
+	num, err := s.r.GetUsersCount(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+	pq, err := utils.NewPagination(getUsersReq.Filter, getUsersReq.Limit, getUsersReq.PageNum, float32(num))
+
+	if err != nil {
+		return nil, err
+	}
+
+	users, err := s.r.GetUsers(ctx, pq)
+
+	if err != nil {
+		return nil, err
+	}
+
+	res := &dto.GetUsersResponse{
+		Limit: pq.Limit,
+		PageNum: pq.PageNum,
+		MaxPage: pq.MaxNum,
+	}
+
+	for i := 0; i < len(users); i++ {
+		ur := &dto.UserResponse{}
+		ur.ID = users[i].ID
+		ur.Email = users[i].Email
+		ur.Profile.FirstName = users[i].FirstName
+		ur.Profile.LastName = users[i].LastName
+		ur.Role.Level = users[i].RoleLevel
+		ur.Role.Name = users[i].RoleName
+
+		res.Users = append(res.Users, ur)
+	}
+
+	return res, nil
+}
+
 func (s *authService) UserLogin(ctx context.Context, cu *dto.UserLoginRequest) (*dto.UserLoginResponse, error) {
 
 	user, errRepo := s.r.FindByEmail(ctx, &dao.User{Email: cu.Email})

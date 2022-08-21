@@ -1,5 +1,24 @@
 package dto
 
+type UserResponse struct {
+	ID	uint32		`json:"id"`
+	Email string `json:"email"`
+	Profile struct {
+		FirstName string `json:"firstName"`
+		LastName string `json:"lastName"`
+	} `json:"userProfile"`
+	Role struct {
+		Name string `json:"Name"`
+		Level uint32 `json:"Level"`
+	} `json:"userRole"`
+}
+
+type GetUsersRequest struct {
+	Filter 	string	`query:"filter"`
+	Limit	float32	`query:"limit"`
+	PageNum	float32	`query:"page_num"`
+}
+
 type UserLoginRequest struct {
 	Email	string `json:"email"`
 	Password string `json:"password"`
@@ -48,9 +67,16 @@ type EditUserRole struct {
 	UserID uint32 `json:"userId"`
 	RoleID uint32 `json:"roleId"`
 }
+type GetUsersResponse struct {
+	Limit	float32		`json:"limit"`
+	PageNum	float32		`json:"page_num"`
+	MaxPage	float32		`json:"max_page"`
+	Users  	[]*UserResponse `json:"users"`
+}
 
 type GetUserRequest struct {
-	Email string `json:"email"`
+	Email 	string 	`json:"email"`
+	ID		uint32	`params:"id"`
 }
 
 type GetUserResponse struct {
